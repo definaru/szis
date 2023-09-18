@@ -1,0 +1,28 @@
+.Mui-selected {
+  color: #000 !important;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.react-datetime-picker__button svg rect, line {
+  display: inherit;
+  stroke: #006af2;
+}
+.react-datetime-picker__inputGroup__input {
+  min-width: 0.3em;
+  width: 2.7em;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+.react-datetime-picker__wrapper {
+  border: 1px solid #EFEFEF;
+  padding: 5px 5px 5px 10px;
+  border-radius: 5px;
+}
+.react-datetime-picker__clear-button__icon {
+  display: none !important;
+}
