@@ -1,0 +1,24 @@
+.btn-info {
+    background-color: #006AF2 !important;
+    border: 1px solid #006AF2 !important;
+    color: #fff !important;
+    border-radius: 10px !important;
+}
+.btn-success {
+    background-color: #36B44C !important;
+    border: 1px solid #36B44C !important;
+    color: #fff !important;
+    border-radius: 10px !important;
+}
+.btn-danger {
+    background-color: #CC2128 !important;
+    border: 1px solid #CC2128 !important;
+    color: #fff !important;
+    border-radius: 10px !important;
+}
+.btn-warning {
+    background-color: #FFCD00 !important;
+    border: 1px solid #FFCD00 !important;
+    color: #fff !important;
+    border-radius: 10px !important;
+}

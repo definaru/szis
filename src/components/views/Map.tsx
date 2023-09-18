@@ -58,34 +58,34 @@ export function Map()
                     </Tabs>
                 </Box>
                 <CustomTabPanel tab={tab} index={0}>
-                    <Box sx={{mb: 2, display: 'flex', gap: '20px', alignItems: 'center'}}>
-                        <strong style={{fontSize: '22px', fontWeight: 500}}>Общая карта г. Москва</strong>
-                        <div style={{ display: 'flex', gap: '10px', fontSize: '16px' }}>
-                            <label>
-                                <input type='radio' name="map" defaultChecked={true} /> Билайн
-                            </label>                            
-                            <label>
-                                <input type='radio' name="map" value={''} /> МТС
-                            </label>                            
-                            <label>
-                                <input type='radio' name="map" value={''} /> Мегафон
-                            </label>                            
-                            <label>
-                                <input type='radio' name="map" value={''} /> Теле 2
-                            </label>                            
-                            <label>
-                                <input type='radio' name="map" value={''} /> Все
-                            </label>                            
-                        </div>
-                    </Box>
                     <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 45%', mb: 5 }}>
                         <div>
+                            <Box sx={{mb: 2, display: 'flex', gap: '20px', alignItems: 'center'}}>
+                                <strong style={{fontSize: '22px', fontWeight: 500}}>Общая карта г. Москва</strong>
+                                <div style={{ display: 'flex', gap: '10px', fontSize: '16px' }}>
+                                    <label>
+                                        <input type='radio' name="map" defaultChecked={true} /> Билайн
+                                    </label>                            
+                                    <label>
+                                        <input type='radio' name="map" value={''} /> МТС
+                                    </label>                            
+                                    <label>
+                                        <input type='radio' name="map" value={''} /> Мегафон
+                                    </label>                            
+                                    <label>
+                                        <input type='radio' name="map" value={''} /> Теле 2
+                                    </label>                            
+                                    <label>
+                                        <input type='radio' name="map" value={''} /> Все
+                                    </label>                            
+                                </div>
+                            </Box>
                             <iframe 
                                 src="https://yandex.ru/map-widget/v1/?um=constructor%3Acd17e60c20d8d094eaeef2c70824d7a3971b37598b2c9e38c873e27c5374bb80&amp;source=constructor" 
                                 width="100%"
                                 style={{
                                     borderRadius: '10px', 
-                                    height: '100%',
+                                    height: '90%',
                                     border: 0, 
                                     boxShadow: '0px 3px 3px -2px rgba(0,0,0,0.2), 0px 3px 4px 0px rgba(0,0,0,0.14), 0px 1px 8px 0px rgba(0,0,0,0.12)'
                                 }}
@@ -120,7 +120,7 @@ export function Map()
                                         ['Москва, ул. Комсомольский проспект, 32', '23', '65 793', '65 793', '65 793', '65 793']
                                     ]}
                                 />
-                                <Button sx={{textTransform: 'inherit', mt: 10}} className={contents['btn-warning']} variant='contained' size='small'>
+                                <Button sx={{textTransform: 'inherit', mt: 8}} className={contents['btn-warning']} variant='contained' size='small'>
                                     &#160;&#160;Повторить&#160;&#160;
                                 </Button>
                             </Box>                     
