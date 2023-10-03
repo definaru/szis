@@ -1,12 +1,16 @@
 import { MainLayout } from '../layout/MainLayout'
-//import { Typography, Paper, Box, Button } from '@mui/material'
-
+import { Typography } from '@mui/material'
+import contents from '../styles/MainLayout.module.css'
 
 export function Users()
 {
     return (
         <MainLayout title='Пользователи'>
-            <h3>Пользователи</h3>
+            <Typography variant="h1" sx={{color: '#1C1C1C', fontSize: '24px', fontWeight: 600}}>
+                Пользователи
+            </Typography> 
+            <hr className={contents['hr-line']} />
+            <p>...</p>
         </MainLayout>
     )
 }

@@ -2,6 +2,14 @@
   color: #000 !important;
 }
 
+svg.MuiSvgIcon-root path {
+    fill: #a7a4a4 !important;
+}
+.MuiSelect-select {
+    color: #000 !important;
+    border-bottom: 1px dashed #555 !important;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

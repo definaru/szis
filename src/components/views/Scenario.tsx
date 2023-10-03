@@ -22,7 +22,7 @@ export function Scenario()
 
     return (
         <MainLayout title='Выбор сценариев'>
-            <Typography sx={{py: 1, color: '#1C1C1C', fontSize: '24px', fontWeight: 500}}>
+            <Typography variant="h1" sx={{py: 1, color: '#1C1C1C', fontSize: '24px', fontWeight: 500}}>
                 Сценарии информирования
             </Typography> 
             <hr style={{

@@ -9,8 +9,8 @@ export function GetMenu()
             icon: Dashboard
         },
         {
-            url: '/map',
-            name: 'Карта',
+            url: '/map', // Карта
+            name: 'Массовое информирование',
             icon: Map
         },
         {
@@ -19,14 +19,19 @@ export function GetMenu()
             icon: Scenario
         },
         {
+            url: '/info',
+            name: 'Информирование',
+            icon: Map
+        },
+        {
             url: '/locator',
-            name: 'Локатор',
+            name: 'Трекинг', // (локатор)
             icon: Locator
         },
         {
             url: '/directory',
-            name: 'Справочник',
-            icon: Directory
+            name: 'Справочник', // Телефонный справочник (верхний)
+            icon: Directory // Сценарии информирования
         },
         {
             url: '/reports',

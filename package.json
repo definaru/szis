@@ -9,6 +9,7 @@
     "@mui/lab": "^5.0.0-alpha.140",
     "@mui/material": "^5.14.5",
     "@mui/x-date-pickers": "^6.11.2",
+    "@mui/x-tree-view": "^6.0.0-alpha.3",
     "@reduxjs/toolkit": "^1.7.1",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",

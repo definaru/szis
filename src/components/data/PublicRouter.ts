@@ -8,6 +8,7 @@ import { Directory } from '../views/Directory'
 import { Reports } from '../views/Reports'
 import { Settings } from '../views/Settings'
 import { Users } from '../views/Users'
+import { Info } from '../views/Info'
 import { Map } from '../views/Map'
 
 
@@ -29,6 +30,10 @@ export function PublicRouter()
         {
             path: '/scenario',
             element: Scenario
+        },
+        {
+            path: '/info',
+            element: Info
         },
         {
             path: '/locator',

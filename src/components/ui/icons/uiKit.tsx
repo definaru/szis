@@ -106,6 +106,24 @@ export function Users({color = '#fff'})
     )
 }
 
+export function UserDefault({color = '#A1F649'})
+{
+    return (
+        <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#clip0_54_2547)">
+                <rect width="30" height="30" rx="15" fill="#CFCFCF"/>
+                <rect x="9" y="5" width="12" height="12" rx="6" fill={color}/>
+                <rect x="-7.5" y="20" width="45" height="45" rx="22.5" fill={color}/>
+            </g>
+            <defs>
+                <clipPath id="clip0_54_2547">
+                    <rect width="30" height="30" rx="15" fill="white"/>
+                </clipPath>
+            </defs>
+        </svg>
+    )
+}
+
 export function Exit({color = '#7C7C7C'})
 {
     return (
@@ -200,6 +218,41 @@ export function EnterID({color = '#7C7C7C'})
     return (
         <svg width="9" height="15" viewBox="0 0 9 15" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M1.5 1C1.5 0.723858 1.27614 0.5 1 0.5C0.723858 0.5 0.5 0.723858 0.5 1H1.5ZM1 11H0.5V11.5H1V11ZM8.35355 11.3536C8.54882 11.1583 8.54882 10.8417 8.35355 10.6464L5.17157 7.46447C4.97631 7.2692 4.65973 7.2692 4.46447 7.46447C4.2692 7.65973 4.2692 7.97631 4.46447 8.17157L7.29289 11L4.46447 13.8284C4.2692 14.0237 4.2692 14.3403 4.46447 14.5355C4.65973 14.7308 4.97631 14.7308 5.17157 14.5355L8.35355 11.3536ZM0.5 1V11H1.5V1H0.5ZM1 11.5H8V10.5H1V11.5Z" fill={color}/>
+        </svg>
+    )
+}
+
+export function WarningAlert({color = 'currentColor'})
+{
+    return (
+        <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            width="16" 
+            height="16" 
+            fill={color} 
+            // {...(title ? {title: `${title}`} : {})}
+            viewBox="0 0 16 16"
+        >
+            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+        </svg>
+    )
+}
+
+export function PersonLock({color = 'currentColor'})
+{
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill={color} viewBox="0 0 16 16">
+            <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm0 5.996V14H3s-1 0-1-1 1-4 6-4c.564 0 1.077.038 1.544.107a4.524 4.524 0 0 0-.803.918A10.46 10.46 0 0 0 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h5ZM9 13a1 1 0 0 1 1-1v-1a2 2 0 1 1 4 0v1a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-2Zm3-3a1 1 0 0 0-1 1v1h2v-1a1 1 0 0 0-1-1Z"/>
+        </svg>
+    )
+}
+
+export function PencilEdit({color = 'currentColor'})
+{
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill={color} viewBox="0 0 16 16">
+            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
         </svg>
     )
 }

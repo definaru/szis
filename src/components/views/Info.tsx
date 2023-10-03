@@ -1,13 +1,13 @@
-import { Box, Typography } from '@mui/material'
+import { Typography, Box } from '@mui/material'
 import { MainLayout } from '../layout/MainLayout'
 import { LeftMenu } from '../ui/menu/LeftMenu'
-import { TableReference } from '../ui/table/TableReference'
 import { SearchForm } from '../ui/block/SearchForm'
+import { TableReference } from '../ui/table/TableReference'
 import { PersonCard } from '../ui/block/PersonCard'
 import contents from '../styles/MainLayout.module.css'
 
 
-export function Locator()
+export function Info()
 {
     const user = {
         photo: '/img/Rectangle-1738.png',
@@ -18,9 +18,9 @@ export function Locator()
     }
 
     return (
-        <MainLayout title='Локатор'>
+        <MainLayout title='Информирование'>
             <Typography variant="h1" sx={{pt: 2, color: '#1C1C1C', fontSize: '24px', fontWeight: 600}}>
-                Локатор
+                Телефонный справочник
             </Typography> 
             <hr className={contents['hr-line']} />
             <Box sx={{ display: 'grid', gridTemplateColumns: '300px 1fr', gap: '20px' }}>
@@ -29,9 +29,9 @@ export function Locator()
                 </div>
                 <div>
                     <SearchForm />
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: '25px' }}>
-                        <TableReference row='Locator' width={80} />
-                        <PersonCard user={user} />
+                    <Box sx={{ display: 'grid' }}>
+                        <TableReference row='Info' bottom={false} />
+                        <PersonCard label={false} user={user} />
                     </Box>
                 </div>
             </Box>

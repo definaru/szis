@@ -81,15 +81,15 @@ export function ChartsOperator()
         <div>
             <Typography variant="h6" sx={header}>Степень информирования</Typography>
             <Paper sx={{ width: '400px', my: 3, bgcolor: '#fff', boxShadow: 3, p: 2  }}>
-            <Suspense fallback={<div>Loading...</div>}>
-                <Chart 
-                    options={operator.options} 
-                    series={operator.series} 
-                    type={operator.options.chart.type}
-                    width={operator.options.chart.width}
-                    height={operator.options.chart.height}
-                />
-            </Suspense>
+                <Suspense fallback={<div>Loading...</div>}>
+                    <Chart 
+                        options={operator.options} 
+                        series={operator.series} 
+                        type={operator.options.chart.type}
+                        width={operator.options.chart.width}
+                        height={operator.options.chart.height}
+                    />
+                </Suspense>
             </Paper>            
         </div>
     )

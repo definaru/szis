@@ -12,3 +12,5 @@ https://leetcode-opensource.github.io/react-simple-resizer/ - Демонстра
 
 Обработка времени - https://day.js.org/ru/
 
+git clone --branch=dev https://github.com/definaru/szis.git
+
