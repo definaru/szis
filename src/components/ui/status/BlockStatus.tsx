@@ -28,7 +28,7 @@ export function BlockStatus({text}: Block)
             colors = {mx: 1, px: 2, color: '#36B44C', bgcolor: '#CDFFD6', borderRadius: '5px', lineHeight: '28px', display: 'inherit', boxShadow: 1};
             break;
         default:
-            colors = {mx: 1, px: 2, color: '#999', bgcolor: '#ddd', borderRadius: '5px', lineHeight: '28px', display: 'inherit', boxShadow: 1};
+            colors = {mx: 1, px: 2, color: '#666', bgcolor: '#ddd', borderRadius: '5px', lineHeight: '28px', display: 'inherit', boxShadow: 1};
     }
     
     return ( 

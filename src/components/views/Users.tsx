@@ -1,5 +1,6 @@
 import { MainLayout } from '../layout/MainLayout'
-import { Typography } from '@mui/material'
+import { Typography, Paper } from '@mui/material'
+import { TableUsers } from '../ui/table/TableUsers'
 import contents from '../styles/MainLayout.module.css'
 
 export function Users()
@@ -10,7 +11,9 @@ export function Users()
                 Пользователи
             </Typography> 
             <hr className={contents['hr-line']} />
-            <p>...</p>
+            <Paper sx={{bgcolor: '#fff', boxShadow: 3, p: 2, color: '#000' }}>
+                <TableUsers />
+            </Paper>
         </MainLayout>
     )
 }

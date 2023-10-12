@@ -10,8 +10,8 @@ export function Dashboard()
 {
     return (
         <MainLayout title='Dashboard'>
-            <Box sx={{ py: 1, display: 'flex', justifyContent: 'space-between' }}>
-                <Typography variant="h6" sx={{ m: 0}}>Dashboard</Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Typography variant="h1" sx={{ color: '#1C1C1C', fontSize: '24px', fontWeight: 600}}>Dashboard</Typography>
                 <Box>
                     <IconButton className={styles['plus-circle']} sx={{bgcolor: '#006AF2'}}>
                         <PlusCircle />
@@ -23,7 +23,7 @@ export function Dashboard()
                     </IconButton>
                 </Box>
             </Box>
-            <hr />
+            <hr className={styles['hr-line']} />
             <Box sx={{ py: 1, display: 'flex', justifyContent: 'space-between' }}>
                 <Typography variant="h6" sx={{ m: 0, py: 1, fontWeight: 'bold' }}>Оповещения</Typography>
                 <InputDoobleCalendar />

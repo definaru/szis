@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { MainLayout } from '../layout/MainLayout'
-import { Paper, Typography, Box, FormControl, MenuItem, TextField } from '@mui/material'
+import { Paper, Typography, Box, FormControl, MenuItem } from '@mui/material'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import { WarningAlert, PersonLock, PencilEdit } from '../ui/icons/uiKit'
-import contents from '../styles/MainLayout.module.css'
 import { Button } from '../ui/button/Button'
+import contents from '../styles/MainLayout.module.css'
 
 
 export function Settings()
@@ -21,7 +21,7 @@ export function Settings()
                 Профиль пользователя
             </Typography>
             <hr className={contents['hr-line']} />
-            <Paper sx={{ width: '60%', bgcolor: '#fff', boxShadow: 3, p: 2  }}>
+            <Paper sx={{ width: '50%', bgcolor: '#fff', boxShadow: 3, p: 2  }}>
                 <Box sx={{display: 'flex', gap: 3, color: '#000'}}>
                     <img src="/img/Rectangle-1738.png" alt="" />
                     <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '10px'}}>
@@ -47,9 +47,10 @@ export function Settings()
                         </p>
                         <div style={stocke}>
                             <PersonLock color='#006af2' /> 
-                            <FormControl variant="standard" sx={{ color: '#000', minWidth: 120 }}>
+                            <FormControl variant="standard" sx={{ minWidth: 120 }}>
                                 <Select value={age} onChange={handleChange} label="Права и роли">
                                     <MenuItem value={'Пользователь'}>Пользователь</MenuItem>
+                                    <MenuItem value={'Оператор'}>Оператор</MenuItem>
                                     <MenuItem value={'Модератор'}>Модератор</MenuItem>
                                     <MenuItem value={'Администратор'}>Администратор</MenuItem>
                                 </Select>
@@ -81,7 +82,7 @@ export function Settings()
                     </Box>
                 </Box>
             </Paper>
-            <Paper sx={{ width: '60%', bgcolor: '#fff', boxShadow: 3, p: 2, mt: 3 }}>
+            <Paper sx={{ width: '50%', bgcolor: '#fff', boxShadow: 3, p: 2, mt: 3 }}>
                 <Box sx={{display: 'flex', gap: 2, color: '#000'}}>
                     <Box sx={{display: 'grid', width: '100%', gap: 1}}>
                         <label style={{fontWeight: 700, color: '#7c7c7c'}}>Новый пароль</label>

@@ -19,7 +19,7 @@ export function MainLayout({children, title = 'Loading...'}: Layout)
         document.title = title
     }, [title])
 
-    const switcher = isOpen ? '250px 1fr' : '150px 1fr'
+    const switcher = isOpen ? '293px 1fr' : '140px 1fr'
 
     return (
         <div className={contents.app}>

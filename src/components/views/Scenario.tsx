@@ -1,7 +1,8 @@
+import { Button } from '../ui/button/Button'
 import { MainLayout } from '../layout/MainLayout'
 import { Typography, Paper, Box, TableContainer, TableHead, TableRow, TableCell, TableBody } from '@mui/material'
-import { Button } from '../ui/button/Button'
 import { GetDataScenario } from '../data/GetDataScenario'
+import contents from '../styles/MainLayout.module.css'
 
 
 export function Scenario()
@@ -22,15 +23,10 @@ export function Scenario()
 
     return (
         <MainLayout title='Выбор сценариев'>
-            <Typography variant="h1" sx={{py: 1, color: '#1C1C1C', fontSize: '24px', fontWeight: 500}}>
+            <Typography variant="h1" sx={{ color: '#1C1C1C', fontSize: '24px', fontWeight: 600}}>
                 Сценарии информирования
             </Typography> 
-            <hr style={{
-                color: '#F6F6F6',
-                background: '#F6F6F6',
-                borderTop: '1px solid #F6F6F6',
-                marginBottom: '30px'
-            }} />
+            <hr className={contents['hr-line']} />
             <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
                 <TableContainer sx={{my: 1}}>
                     <TableHead>

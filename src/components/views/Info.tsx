@@ -19,7 +19,7 @@ export function Info()
 
     return (
         <MainLayout title='Информирование'>
-            <Typography variant="h1" sx={{pt: 2, color: '#1C1C1C', fontSize: '24px', fontWeight: 600}}>
+            <Typography variant="h1" sx={{ color: '#1C1C1C', fontSize: '24px', fontWeight: 600}}>
                 Телефонный справочник
             </Typography> 
             <hr className={contents['hr-line']} />

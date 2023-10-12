@@ -1,4 +1,5 @@
 import { Box, Paper } from '@mui/material'
+import { Status } from '../label/Status'
 import contents from '../../styles/MainLayout.module.css'
 
 interface Person {
@@ -17,7 +18,7 @@ interface Card {
 export function PersonCard({label = true, user = null}: Card)
 {
     return (
-        <Paper sx={{ width: '700px', bgcolor: '#fff', boxShadow: 3, p: 2  }}>
+        <Paper sx={{ width: '800px', bgcolor: '#fff', boxShadow: 3, p: 2  }}>
             <Box sx={{ display: 'flex', gap: '20px', justifyContent: 'space-between' }}>
                 <div>
                     <img src={user?.photo} alt={user?.name} />
@@ -41,11 +42,9 @@ export function PersonCard({label = true, user = null}: Card)
                             <p>{user?.location}</p>
                         </li>
                     </ul>   
-                    {label &&
-                        <div className={`${contents.label} ${contents['label-success']}`}>
-                            На работе
-                        </div>                     
-                    }
+                    <div className={contents.label}>
+                        {label && <Status text='На работе' />}
+                    </div>
                 </div>
             </Box>
             <img src="/img/map.png" style={{width: '100%', marginTop: '10px'}} alt="Карта" />           

@@ -16,28 +16,30 @@ export function Header()
     const wrapper = isOpen ? 'justify-content-start' : 'justify-content-center'
 
     return (
-        <div className={`${contents.menu} ${contents[wrapper]}`}>
-            <ul>
-                <li style={{justifyContent: 'center'}} onClick={() => dispatch(navMenu())}>
-                    <Guard size='100' />
-                </li>
-                {menu.map((item, i) => (
-                    <li key={i} className={nav.pathname === item.url ? contents.active : ''}>
-                        <Link to={item.url}>
-                            <item.icon />
-                            {isOpen && <span>{item.name}</span>}
-                        </Link>
+        <div style={{height: '100vh', position: 'relative', zIndex: 10 }}>
+            <div className={`${contents.menu} ${contents[wrapper]}`}>
+                <ul>
+                    <li style={{justifyContent: 'center'}} onClick={() => dispatch(navMenu())}>
+                        <Guard size='100' />
                     </li>
-                ))}
-            </ul>
-            <ul style={{padding: '20px 0'}}>
-                <li>
-                    <Link to="/">
-                        <Exit />
-                        {isOpen && <span style={{color: '#7C7C7C'}}>Выход</span>}
-                    </Link>                        
-                </li>
-            </ul>            
+                    {menu.map((item, i) => (
+                        <li key={i} className={nav.pathname === item.url ? contents.active : ''}>
+                            <Link to={item.url}>
+                                <item.icon />
+                                {isOpen && <span>{item.name}</span>}
+                            </Link>
+                        </li>
+                    ))}
+                </ul>
+                <ul style={{padding: '20px 0'}}>
+                    <li>
+                        <Link to="/">
+                            <Exit />
+                            {isOpen && <span style={{color: '#7C7C7C'}}>Выход</span>}
+                        </Link>                        
+                    </li>
+                </ul>            
+            </div>            
         </div>
     )
 }

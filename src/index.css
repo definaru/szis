@@ -1,5 +1,5 @@
 .Mui-selected {
-  color: #000 !important;
+    color: #000 !important;
 }
 
 svg.MuiSvgIcon-root path {
@@ -9,28 +9,40 @@ svg.MuiSvgIcon-root path {
     color: #000 !important;
     border-bottom: 1px dashed #555 !important;
 }
+.MuiInput-input {
+    display: flex !important;
+    align-items: center;
+}
+
+.MuiList-root {
+    background-color: #fff;
+    color: #000;
+}
+.Mui-selected {
+    background-color: #f5f5f5 !important;
+}
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
 
 .react-datetime-picker__button svg rect, line {
-  display: inherit;
-  stroke: #006af2;
+    display: inherit;
+    stroke: #006af2;
 }
 .react-datetime-picker__inputGroup__input {
-  min-width: 0.3em;
-  width: 2.7em;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
+    min-width: 0.3em;
+    width: 2.7em;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
 }
 .react-datetime-picker__wrapper {
-  border: 1px solid #EFEFEF;
-  padding: 5px 5px 5px 10px;
-  border-radius: 5px;
+    border: 1px solid #EFEFEF;
+    padding: 5px 5px 5px 10px;
+    border-radius: 5px;
 }
 .react-datetime-picker__clear-button__icon {
-  display: none !important;
+    display: none !important;
 }
