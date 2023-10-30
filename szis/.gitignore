@@ -1,0 +1,15 @@
+### OSX ###
+.DS_Store
+*.sh
+*.pdf
+
+### Django ###
+*.log
+*.pot
+*.pyc
+assets/
+migrations/
+media/
+__pycache__/
+
+.env
