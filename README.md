@@ -24,7 +24,7 @@
 
 После успешной установки, выполнить:
 
-`mkdir migrations && > __init__.py`
+`mkdir migrations && cd migrations && > __init__.py`
 
 
 Убедитесь, что папка "migrations" появилась в папке проекта, а не в корневой папке.
