@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from szis.models import UserProfile, Zapros, Phone, Division
+from szis.models import UserProfile, Zapros, Phone, Division, Position
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from django.utils.safestring import mark_safe
@@ -10,6 +10,14 @@ from django.conf import settings
 admin.site.site_header = settings.HEADER
 admin.site.site_title = "Панель администрирования"
 admin.site.index_title = settings.DESCRIPTION
+
+
+@admin.register(Position)
+class PositionAdmin(admin.ModelAdmin):
+    list_display = ['user', 'person', 'name']
+    def person(self, obj):
+        return f"{obj.user.last_name} {obj.user.first_name}"
+    person.short_description = "Ф.И.О."
 
 
 @admin.register(Zapros)

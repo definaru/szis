@@ -4,8 +4,9 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
-from szis.data.datalist import LIST_OF_OPERATORS, STATUS, TYPE_NUMBER_PHONE, TYPE_SECTION
+from szis.data.datalist import LIST_OF_OPERATORS, STATUS, TYPE_NUMBER_PHONE, TYPE_SECTION, TYPE_POSITION
 from django.contrib.auth.models import User
+from rest_framework.reverse import reverse
 
 
 
@@ -16,11 +17,8 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='photo')
     avatar = models.ImageField(upload_to='images/users', verbose_name='Фотография')
- 
-    # def __unicode__(self):
-    #     return self.user
  
     class Meta:
         verbose_name = 'Профиль'
@@ -87,3 +85,23 @@ class Division(models.Model):
     def __str__(self):
         return self.type
     #'Вы можете привязать определённый номер к конкретному подразделению.'
+
+
+class Position(models.Model):
+    id = models.AutoField(primary_key = True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='position', verbose_name='ID пользователя')
+    name = models.CharField(max_length=100, null=False, verbose_name='Должность', choices=TYPE_POSITION)
+
+    class Meta:
+        verbose_name = 'должность'
+        verbose_name_plural = 'Список должностей'
+    
+    def __str__(self):
+        return self.name
+
+
+class Scenarios(models.Model):
+    id = models.AutoField(primary_key = True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='script', verbose_name='ID пользователя')
+    name = models.CharField(max_length=100, null=False, verbose_name='Название сценария')
+    datetime = models.DateTimeField(verbose_name='Дата создания')

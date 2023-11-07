@@ -1,9 +1,11 @@
+import secrets
+from string import ascii_lowercase, ascii_uppercase, digits
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from szis.models import Zapros, Phone
 from django.core.mail import EmailMultiAlternatives
 from szis.serializers import PhoneSerializer, UserSerializer, ZaprosSerializer
-from rest_framework import status, viewsets, permissions
+from rest_framework import status, viewsets
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
@@ -14,6 +16,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
 from django.conf import settings
 from datetime import datetime
+from user_agents import parse
 
         
 
@@ -84,13 +87,7 @@ def reports(request):
 def current_user(request, token):
     auth = Token.objects.filter(key=token).values()
     if not auth:
-        error = {
-            'error': True,
-            'message': 'Пользователь не авторизован',
-            'type': 'error',
-            'color': 'danger'
-        }
-        return JsonResponse(error, safe=False)
+        return is_error_user()
     else:
         user_id = list(auth)[0]['user_id']
         response = User.objects.filter(id=user_id).values(
@@ -104,22 +101,36 @@ def current_user(request, token):
             'is_staff',
             'is_active'
         )
-        return JsonResponse(list(response)[0], safe=False)       
+        return JsonResponse(list(response)[0], safe=False)
     
 
 
 def info(request):
-    data = [
+    ip = request.META.get('REMOTE_ADDR')
+    computername = request.META.get('COMPUTERNAME')
+    useragent = request.META.get('HTTP_USER_AGENT')
+    processor = request.META.get('PROCESSOR_ARCHITECTURE')
+    processorname = request.META.get('PROCESSOR_IDENTIFIER')
+    username = request.META.get('USERNAME')
+    ua_string = useragent
+    user_agent = parse(ua_string)
+    data = [ # https://pypi.org/project/user-agents/
         {
             'debug': settings.DEBUG,
             'datetime': datetime.now(),
             'base_dir': settings.BASE_DIR,
             'languages': settings.LANGUAGE_CODE,
-            'time_zone': settings.TIME_ZONE
+            'time_zone': settings.TIME_ZONE,
+            'computername': computername,
+            'useragent': useragent,
+            'device': str(user_agent),
+            'processor': processor,
+            'processorname': processorname,
+            'username': username,
+            'ip': ip
         }
     ]
     return JsonResponse(list(data)[0], safe=False)
-
 
 
 def report(request, id):
@@ -144,6 +155,22 @@ def page_not_found(request, exception):
     return JsonResponse(arr, safe=False)
 
 
+def is_error_user():
+    error = {
+        'error': True,
+        'message': 'Пользователь не авторизован',
+        'type': 'error',
+        'color': 'danger'
+    }
+    return JsonResponse(error, safe=False)
+
+
+def generate_password(length):
+    letters = ascii_lowercase+ascii_uppercase+digits
+    password = ''.join(secrets.choice(letters) for i in range(length))
+    return password
+
+
 
 class ResetPassword(APIView):
     def post(self, request):
@@ -154,7 +181,7 @@ class ResetPassword(APIView):
             user = User.objects.filter(email=to_email)
             data = {
                 'email': to_email,
-                'password': 'PKAwENb1frjOWVu5pvWd',
+                'password': generate_password(20),
                 'name': settings.HEADER,
                 'support_mail': settings.DEFAULT_SUPPORT_EMAIL,
                 'support_phone': settings.DEFAULT_PHONE,

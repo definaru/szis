@@ -1,6 +1,6 @@
-from szis.models import Zapros, Phone, Division
-from django.contrib.auth.models import User
 from rest_framework import serializers
+from szis.models import Zapros, Phone, Division, Position, UserProfile
+from django.contrib.auth.models import User
 
 
 
@@ -10,10 +10,22 @@ class DivisionSerializer(serializers.ModelSerializer):
         fields = ['type'] #'id', 'otdel', 
 
 
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = ['avatar'] #'user' 
+
+
 class UserPhoneSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['first_name', 'last_name']
+
+
+class PositionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Position
+        fields = ['name']
 
 
 class UserOnlyPhoneSerializer(serializers.ModelSerializer):
@@ -36,10 +48,18 @@ class UserSerializer(
         serializers.ModelSerializer
     ):
     phones = UserOnlyPhoneSerializer(many=True)
-    #serializers.StringRelatedField(many=True)
+    position = PositionSerializer(many=True)
+    photo = UserProfileSerializer()
+    # serializer = serializers.StringRelatedField() #
+    position = serializers.StringRelatedField(many=True)
+
     class Meta:
         model = User
-        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'phones']
+        fields = [
+            'id', 'photo', 'username', 'first_name', 'last_name', 
+            'email', 'phones', 'position', 
+            'is_superuser', 'is_staff', 'is_active'
+        ]
 
 
 class ZaprosSerializer(serializers.HyperlinkedModelSerializer):
@@ -47,6 +67,9 @@ class ZaprosSerializer(serializers.HyperlinkedModelSerializer):
     # serializers.StringRelatedField(many=True)
     class Meta:
         model = Zapros
-        fields = ['id', 'company_id', 'status', 'username', 'operator', 'datetime', 'address', 'user', 'message', 'radius', 'longitude', 'latitude'] 
-        #'__all__' user many=True
+        fields = [
+            'id', 'company_id', 'status', 'username', 'operator', 
+            'datetime', 'address', 'user', 'message', 'radius', 
+            'longitude', 'latitude'
+        ]
 
