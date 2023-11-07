@@ -17,13 +17,13 @@ import content from '../styles/MainLayout.module.css'
 export function Person()
 {
     const dispatch = useAppDispatch()
-    const {users, isLoading, error} = useAppSelector(state => state.userReducer)
+    //const {users, isLoading, error} = useAppSelector(state => state.userReducer)
     const [url, setUrl] = useState<string>('https://swapi.dev/api/people/?format=json')
-    const {count, next, previous, results }: any = users
+    //const {count, next, previous, results }: any = users
 
-    useEffect(() => {
-        dispatch(fetchUsers(url))
-    }, [url])
+    // useEffect(() => {
+    //     dispatch(fetchUsers(url))
+    // }, [url])
 
     return (
         <MainLayout title='Persons'>
@@ -32,7 +32,7 @@ export function Person()
             </Typography>
 
             {/* {isLoading && <p>Обождите, грузится...</p>} */}
-            {error ? <AlertMessage message={error} /> :
+            {/* {error ? <AlertMessage message={error} /> :
                 <Box component="div">
                     <p>Всего персонажей: {count}</p>
                     <NavigatePerson previous={previous} next={next} setUrl={setUrl} />            
@@ -90,7 +90,7 @@ export function Person()
                     </TableContainer>    
                     <NavigatePerson previous={previous} next={next} setUrl={setUrl} />     
                 </Box>
-            }
+            } */}
         </MainLayout>
     )
 }

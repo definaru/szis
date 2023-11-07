@@ -1,7 +1,8 @@
 import { Exit } from '../icons/uiKit'
 import { Guard } from '../logo/images'
 import { GetMenu } from '../../data/GetMenu'
-import { Link, useLocation } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../../hooks/redux'
 import { navMenu } from '../../../store/reducers/DataSlice'
 import contents from '../../styles/MainLayout.module.css'
@@ -11,9 +12,18 @@ export function Header()
 {
     const menu = GetMenu()
     const nav = useLocation()
+    const navigate = useNavigate()
     const dispatch = useAppDispatch()
-    const {isOpen} = useAppSelector((state) => state.userReducer)
+    const {isOpen} = useAppSelector((state) => state.startReducer)
     const wrapper = isOpen ? 'justify-content-start' : 'justify-content-center'
+    const [isAuth, setIsAuth] = useState<boolean>(false)
+
+    //useEffect(() => {
+        if(isAuth) {
+            localStorage.removeItem("auth")
+            setTimeout(() => navigate("/"), 500)
+        }
+    //}, [])
 
     return (
         <div style={{height: '100vh', position: 'relative', zIndex: 10 }}>
@@ -33,10 +43,10 @@ export function Header()
                 </ul>
                 <ul style={{padding: '20px 0'}}>
                     <li>
-                        <Link to="/">
+                        <a onClick={() => setIsAuth(true)} style={{cursor: 'pointer'}}>
                             <Exit />
                             {isOpen && <span style={{color: '#7C7C7C'}}>Выход</span>}
-                        </Link>                        
+                        </a>                        
                     </li>
                 </ul>            
             </div>            

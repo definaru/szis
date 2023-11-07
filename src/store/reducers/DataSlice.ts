@@ -1,17 +1,16 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { Characters } from '../../models/Users'
-import { IData } from '../../models/IData'
+import { Arrays, StartInterface, User, OnlyOneUser } from '../../models/Interfaces'
 
 
-interface UserState {
-    users: Characters[] | IData[];
+interface GetState {
+    data: StartInterface[] | User[] | Arrays[] | OnlyOneUser[];
     isLoading: boolean;
     isOpen: boolean;
     error: string;
 }
 
-const initialState: UserState = {
-    users: [],
+const initialState: GetState = {
+    data: [],
     isLoading: false,
     isOpen: false,
     error: ''
@@ -24,18 +23,28 @@ export const dataSlice = createSlice({
         navMenu(state) {
             state.isOpen = !state.isOpen;
         },
-        userLoading(state) {
+        isLoading(state) {
             state.isLoading = true
         },
-        userFetching(state, action: PayloadAction<Characters[]>) {
+        startFetching(state, action: PayloadAction<StartInterface[]>) {
             state.isLoading = false
             state.error = ''
-            state.users = action.payload
+            state.data = action.payload
         },
-        charactersFetching(state, action: PayloadAction<IData[]>) {
+        getCurrentUser(state, action: PayloadAction<User[]>) {
             state.isLoading = false
             state.error = ''
-            state.users = action.payload
+            state.data = action.payload
+        },
+        getUserOnID(state, action: PayloadAction<OnlyOneUser[]>) {
+            state.isLoading = false
+            state.error = ''
+            state.data = action.payload
+        },
+        getAllUsers(state, action: PayloadAction<Arrays[]>) {
+            state.isLoading = false
+            state.error = ''
+            state.data = action.payload
         },
         getMessageError(state, action: PayloadAction<string>) {
             state.isLoading = false

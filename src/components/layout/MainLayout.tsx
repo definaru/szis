@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 //import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Box } from '@mui/material'
 import { Header } from '../ui/menu/Header'
 import { useAppSelector } from '../../hooks/redux'
@@ -13,10 +14,16 @@ interface Layout {
 
 export function MainLayout({children, title = 'Loading...'}: Layout) 
 {
-    const {isOpen} = useAppSelector((state) => state.userReducer)
+    const navigate = useNavigate()
+    const {isOpen} = useAppSelector((state) => state.startReducer)
+    const isAuth = true
 
     useEffect(() => {
         document.title = title
+        if (!isAuth) {
+            return navigate("/")
+        }
+
     }, [title])
 
     const switcher = isOpen ? '293px 1fr' : '140px 1fr'

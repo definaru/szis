@@ -20,14 +20,14 @@ export function Characters() // LoadingCharacters.tsx
     const dispatch = useAppDispatch()
     const names = params.name
     
-    const {users, isLoading, error} = useAppSelector(state => state.userReducer)
+    //const {users, isLoading, error} = useAppSelector(state => state.userReducer)
 
-    const { results }: any = users
-    const { name, height, mass, hair_color, skin_color, eye_color, films }: any = results[0]
+    //const { results }: any = users
+    //const { name, height, mass, hair_color, skin_color, eye_color, films }: any = results[0]
 
-    useEffect(() => {
-        dispatch(fetchOneCharacters(names))
-    }, [names])
+    // useEffect(() => {
+    //     dispatch(fetchOneCharacters(names))
+    // }, [names])
 
     return (
         <MainLayout title='...'>
@@ -39,7 +39,7 @@ export function Characters() // LoadingCharacters.tsx
                 </Box>
             </Toolbar>
             
-            {error ? 
+            {/* {error ? 
             <AlertMessage message={error} /> :
             <Paper>
                 <Box component="div" sx={{ p: 5 }}>
@@ -77,7 +77,7 @@ export function Characters() // LoadingCharacters.tsx
                     <hr />
                     {FilmsController(films)}
                 </Box>
-            </Paper>}       
+            </Paper>}        */}
         </MainLayout>
     )
 }

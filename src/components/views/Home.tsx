@@ -1,108 +1,94 @@
-
-import React, { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AuthLayout } from '../layout/AuthLayout'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { TextField, FormControlLabel, Checkbox, Button, Box, Modal } from '@mui/material'
-import LoadingButton from '@mui/lab/LoadingButton'
-import SaveIcon from '@mui/icons-material/Save'
-import { Close } from '../ui/icons/uiKit'
+import { TextField, FormControlLabel, Checkbox, Button, Alert } from '@mui/material'
+import { LoadingButtons } from '../ui/button/LoadingButton'
+import { ModalResetPassword } from '../ui/modal/ModalResetPassword'
+import { GetAuthUser } from '../../api/requests/GetAuthUser'
 import contents from '../styles/AuthLayout.module.css'
+import { HighlightSpanKind } from 'typescript'
 
-type Inputs = {
+
+export type Inputs = {
     email: string,
     password: string,
     remember: string
 };
 
+interface Error {
+    error?: boolean;
+    message?: string;
+}
+
+// interface Token {
+//     token: string;
+//     user_id: number;
+//     email: string;
+//     username: string;
+//     first_name: string;
+//     last_name: string;
+// }
+
 export function Home()
 {
     const navigate = useNavigate()
     const { register, handleSubmit, watch, formState: { errors } } = useForm<Inputs>()
-    const onSubmit: SubmitHandler<Inputs> = data => {
-        console.log(data)
+    const onSubmit: SubmitHandler<Inputs> = async(data) => {
+        setLoading(true)
+        setTimeout(() => setLoading(false), 2000)
         if (data) {
-            setLoading(true)
-            setTimeout(() => navigate("/dashboard"), 1000);
+            const auth = await GetAuthUser(data)
+            console.log('Auth:', auth)
+            setIsAuth(auth)
+            if(auth.token) {
+                setTimeout(() => navigate("/dashboard"), 1000)
+            }            
         }
     }
-    const modal = {
-        header: 'Восстановить пароль',
-        text: 'Новый пароль будет выслан на вашу электронную почту',
-        textbutton: 'Получить новый пароль'
-    }
-    const [open, setOpen] = useState(false)
-    const [send, setSend] = useState(modal)
-    const [loading, setLoading] =  useState(false)
-    const isSend = () => setSend({
-        header: 'Отлично! Проверьте почту.',
-        text: 'Мы отправили новый пароль на вашу почту',
-        textbutton: 'Вернуться'
-    })
-    const Restart = () => {
-        setSend(modal)
-        setOpen(false)
-    }
+    const [open, setOpen] = useState<boolean>(false)
+    const [loading, setLoading] = useState(false)
+    const [isAuth, setIsAuth] = useState<Error | any>({})
 
-    const style = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: 425,
-        bgcolor: '#0D1535',
-        border: 'none',
-        borderRadius: '12px',
-        boxShadow: 24,
-        p: 3,
-    }
+    // useEffect(() => {
+
+    // }, [])
 
     return (
         <AuthLayout title='Вход'>
             <form onSubmit={handleSubmit(onSubmit)} className={contents.box}>
+                {isAuth?.error && <Alert severity="error">{isAuth?.message}</Alert>}
                 <p className={contents.title}>Войти</p>
-                <p>
+                <div>
                     <TextField
+                        error={errors.email ? true : false}
                         fullWidth
                         label="Ваш логин" 
                         variant="outlined"
-                        defaultValue="rodichkin"
+                        defaultValue=""
                         placeholder="Ваш логин"
-                        {...register("email")}
-                        //InputProps={{readOnly: true}} 
-                    />
-                </p>
-                <p>
+                        {...register('email', { required: true })}
+                        helperText={errors.email && 'Введите ваш логин'}
+                    />                    
+                </div>
+                <div>
                     <TextField 
-                        id="outlined-read-only-input" 
+                        error={errors.password ? true : false}
                         fullWidth
                         type="password"
                         label="Введите пароль" 
                         variant="outlined"
-                        defaultValue="Montserrat"
+                        defaultValue=""
                         placeholder="Введите пароль"
-                        {...register("password")}
-                        //InputProps={{readOnly: true}}
+                        {...register('password', { required: true })}
+                        helperText={errors.password && 'Укажите ваш пароль'}
                     />
-                </p>
+                </div>
                 <div>
                     <div className={contents.flex}>
-
                         {loading ? 
-                            <LoadingButton
-                                //color="primary"
-                                size="large"
-                                loading={true}
-                                loadingPosition="start"
-                                startIcon={<SaveIcon />}
-                                variant="contained"
-                                className={contents['btn-info']}
-                                disabled
-                            >
-                                <span>Загружается...</span>
-                            </LoadingButton> :
-                            <Button 
-                                //color="info"
+                            <LoadingButtons /> :
+                            <Button
                                 size="large"
                                 type="submit"
                                 variant="contained" 
@@ -119,58 +105,18 @@ export function Home()
                         />                          
                     </div>
                     <p className={contents['text-center']}>
-                        <a 
-                            href="#" 
+                        <span 
+                            style={{cursor: 'pointer'}} 
                             onClick={() => setOpen(true)}
                             className={contents.link}
                         >
                             Восстановление пароля
-                        </a>
+                        </span>
                     </p>                
-                </div>                
+                </div>
+                {/* <pre>{JSON.stringify(isAuth, null, 4)}</pre> */}
             </form>
-            <Modal open={open} className={contents.modal}>
-                <Box sx={style}>
-                    <div className={contents.flex}>
-                        <h2>{send.header}</h2>
-                        <p onClick={Restart}>
-                            <Close />
-                        </p>
-                    </div>
-
-                    <p className={contents.description}>
-                        {send.text}
-                    </p>
-                    <TextField
-                        fullWidth
-                        label="Электронная почта"
-                        defaultValue="name@mail.com"
-                        placeholder="Ваша электронная почта"
-                    />
-                    {
-                        send.textbutton === 'Вернуться' ? 
-                            <Button
-                                className={contents.success}
-                                size="large" 
-                                sx={{ mt: 2 }}
-                                variant="contained"
-                                onClick={Restart}
-                            >
-                                {send.textbutton}
-                            </Button> :
-                            <Button
-                                className={contents.info}
-                                size="large" 
-                                sx={{ mt: 2 }}
-                                variant="contained"
-                                onClick={isSend}
-                            >
-                                {send.textbutton}
-                            </Button>
-                    }
-
-                </Box>
-            </Modal>
+            <ModalResetPassword open={open} setOpen={setOpen} />
         </AuthLayout>
     )
 }
