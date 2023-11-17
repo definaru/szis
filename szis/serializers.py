@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from szis.models import Zapros, Phone, Division, Position, UserProfile
-from django.contrib.auth.models import User
+from szis.models import Zapros, Phone, Division, Position, UserProfile, Handbook
+from django.contrib.auth.models import User, Group
 
 
 
@@ -8,6 +8,12 @@ class DivisionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Division
         fields = ['type'] #'id', 'otdel', 
+
+
+class GroupSerializer(serializers.ModelSerializer):    
+    class Meta:
+        model = Group
+        fields = ['name']
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -20,6 +26,12 @@ class UserPhoneSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['first_name', 'last_name']
+
+
+class HandbookSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Handbook
+        fields = ['id', 'rank', 'user', 'photo', 'name', 'phone', 'subdivision', 'location', 'status']
 
 
 class PositionSerializer(serializers.ModelSerializer):
@@ -52,12 +64,13 @@ class UserSerializer(
     photo = UserProfileSerializer()
     # serializer = serializers.StringRelatedField() #
     position = serializers.StringRelatedField(many=True)
+    groups = GroupSerializer(many=True)
 
     class Meta:
         model = User
         fields = [
             'id', 'photo', 'username', 'first_name', 'last_name', 
-            'email', 'phones', 'position', 
+            'email', 'phones', 'position', 'groups', 
             'is_superuser', 'is_staff', 'is_active'
         ]
 

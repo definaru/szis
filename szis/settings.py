@@ -59,7 +59,7 @@ CSRF_TRUSTED_ORIGINS = ['http://localhost:8000']
 # https://github.com/adamchainz/django-cors-headers
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "https://szis.netlify.app"
+    "https://szis.netlify.app" 
 ]
 
 CORS_ALLOW_METHODS = (

@@ -4,7 +4,7 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
-from szis.data.datalist import LIST_OF_OPERATORS, STATUS, TYPE_NUMBER_PHONE, TYPE_SECTION, TYPE_POSITION
+from szis.data.datalist import LIST_OF_OPERATORS, STATUS, TYPE_NUMBER_PHONE, TYPE_SECTION, TYPE_POSITION, TYPE_RANK, TYPE_DIVISION
 from django.contrib.auth.models import User
 from rest_framework.reverse import reverse
 
@@ -105,3 +105,22 @@ class Scenarios(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='script', verbose_name='ID пользователя')
     name = models.CharField(max_length=100, null=False, verbose_name='Название сценария')
     datetime = models.DateTimeField(verbose_name='Дата создания')
+
+
+class Handbook(models.Model):
+    id = models.AutoField(primary_key = True)
+    rank = models.CharField(max_length=100, null=False, verbose_name='Звание', choices=TYPE_RANK)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='book', verbose_name='ID пользователя')
+    photo = models.ImageField(upload_to='images/photo/book', null=True, verbose_name='Фотография')
+    name = models.CharField(max_length=255, null=False, verbose_name='ФИО')
+    phone = models.CharField(max_length=64, null=False, verbose_name='Номера телефона')
+    subdivision = models.CharField(max_length=64, null=False, verbose_name='Подразделение', choices=TYPE_DIVISION)
+    location = models.CharField(max_length=255, null=True, verbose_name='Локация')
+    status = models.BooleanField(verbose_name='Статус')
+
+    class Meta:
+        verbose_name = 'запись'
+        verbose_name_plural = 'Телефонный справочник'
+    
+    def __str__(self):
+        return self.name

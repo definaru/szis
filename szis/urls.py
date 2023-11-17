@@ -17,6 +17,7 @@ router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
 router.register(r'report', views.ZaprosViewSet)
 router.register(r'phone', views.PhoneViewSet)
+router.register(r'book', views.HandbookViewSet)
 
 handler404 = 'szis.views.page_not_found'
 
@@ -33,7 +34,4 @@ urlpatterns = [
     path('api/v1/reset/password', views.ResetPassword.as_view(), name='reset_password'), 
     path('api/v1/me/<str:token>', views.current_user),
     path('info', views.info)
-] 
-#+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-
-
+]

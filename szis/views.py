@@ -2,9 +2,9 @@ import secrets
 from string import ascii_lowercase, ascii_uppercase, digits
 from django.http import JsonResponse
 from django.contrib.auth.models import User
-from szis.models import Zapros, Phone
+from szis.models import Zapros, Phone, Handbook
 from django.core.mail import EmailMultiAlternatives
-from szis.serializers import PhoneSerializer, UserSerializer, ZaprosSerializer
+from szis.serializers import HandbookSerializer, PhoneSerializer, UserSerializer, ZaprosSerializer
 from rest_framework import status, viewsets
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.pagination import PageNumberPagination
@@ -29,9 +29,6 @@ def user_logout(request):
             return Response({'message': 'Успешный выход из системы.'}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-
 
 
 class StandardResultsSetPagination(PageNumberPagination):
@@ -59,16 +56,27 @@ class PhoneViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, ]
 
 
+class HandbookViewSet(viewsets.ModelViewSet):
+    queryset = Handbook.objects.all()
+    serializer_class = HandbookSerializer
+    permission_classes = [IsAuthenticated, ]
+
+
+def domain(request):
+    url = request.META.get('HTTP_HOST')
+    protocol = request.scheme
+    return protocol+'://'+url
+
 
 def index(request):
     arr = [
         {
             'name': settings.HEADER,
             'description': settings.DESCRIPTION,
-            'version': '1.0.0',
+            'version': '0.1.6',
             'domain': 'https://szis.netlify.app',
-            'info': 'http://127.0.0.1:8000/info',
-            'api': 'http://127.0.0.1:8000/api/v1/',        
+            'info': domain(request)+'/info',
+            'api': domain(request)+'/api/v1/',
             'support': {
                 'text': 'Служба технической поддержки',
                 'phone': settings.DEFAULT_PHONE,
@@ -107,13 +115,8 @@ def current_user(request, token):
 
 def info(request):
     ip = request.META.get('REMOTE_ADDR')
-    computername = request.META.get('COMPUTERNAME')
     useragent = request.META.get('HTTP_USER_AGENT')
-    processor = request.META.get('PROCESSOR_ARCHITECTURE')
-    processorname = request.META.get('PROCESSOR_IDENTIFIER')
     username = request.META.get('USERNAME')
-    ua_string = useragent
-    user_agent = parse(ua_string)
     data = [ # https://pypi.org/project/user-agents/
         {
             'debug': settings.DEBUG,
@@ -121,11 +124,7 @@ def info(request):
             'base_dir': settings.BASE_DIR,
             'languages': settings.LANGUAGE_CODE,
             'time_zone': settings.TIME_ZONE,
-            'computername': computername,
             'useragent': useragent,
-            'device': str(user_agent),
-            'processor': processor,
-            'processorname': processorname,
             'username': username,
             'ip': ip
         }
@@ -169,7 +168,6 @@ def generate_password(length):
     letters = ascii_lowercase+ascii_uppercase+digits
     password = ''.join(secrets.choice(letters) for i in range(length))
     return password
-
 
 
 class ResetPassword(APIView):
