@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AuthLayout } from '../layout/AuthLayout'
 import { useForm, SubmitHandler } from 'react-hook-form'
@@ -7,7 +7,6 @@ import { LoadingButtons } from '../ui/button/LoadingButton'
 import { ModalResetPassword } from '../ui/modal/ModalResetPassword'
 import { GetAuthUser } from '../../api/requests/GetAuthUser'
 import contents from '../styles/AuthLayout.module.css'
-import { HighlightSpanKind } from 'typescript'
 
 
 export type Inputs = {
@@ -21,14 +20,6 @@ interface Error {
     message?: string;
 }
 
-// interface Token {
-//     token: string;
-//     user_id: number;
-//     email: string;
-//     username: string;
-//     first_name: string;
-//     last_name: string;
-// }
 
 export function Home()
 {
@@ -39,7 +30,6 @@ export function Home()
         setTimeout(() => setLoading(false), 2000)
         if (data) {
             const auth = await GetAuthUser(data)
-            console.log('Auth:', auth)
             setIsAuth(auth)
             if(auth.token) {
                 setTimeout(() => navigate("/dashboard"), 1000)
@@ -49,10 +39,6 @@ export function Home()
     const [open, setOpen] = useState<boolean>(false)
     const [loading, setLoading] = useState(false)
     const [isAuth, setIsAuth] = useState<Error | any>({})
-
-    // useEffect(() => {
-
-    // }, [])
 
     return (
         <AuthLayout title='Вход'>
@@ -114,7 +100,6 @@ export function Home()
                         </span>
                     </p>                
                 </div>
-                {/* <pre>{JSON.stringify(isAuth, null, 4)}</pre> */}
             </form>
             <ModalResetPassword open={open} setOpen={setOpen} />
         </AuthLayout>

@@ -14,12 +14,12 @@ export const GetCurrentUser = (url: string) => async(dispatch: AppDispatch) => {
     }
 }
 
-export const GetUserOnID = (url: string) => async(dispatch: AppDispatch) => {
+export const GetUserOnID = (url: string, token: string) => async(dispatch: AppDispatch) => {
     try {
         dispatch(dataSlice.actions.isLoading())
         const responce = await axios.get<OnlyOneUser[]>(url, {
             headers: {
-                'Authorization': 'Token 1622c816ff7fa1d856bea14d8297eec1ff85917a'
+                'Authorization': `Token ${token}`
             }
         })
         dispatch(dataSlice.actions.getUserOnID(responce.data))

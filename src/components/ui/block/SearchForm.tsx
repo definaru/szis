@@ -10,7 +10,9 @@ export function SearchForm()
             <input 
                 type="search" 
                 name="search" 
+                defaultValue={''}
                 className={contents.search} 
+                autoComplete='off'
                 placeholder='Поиск' 
             />
             <Button color='info'>Искать</Button>                

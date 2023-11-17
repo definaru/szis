@@ -1,87 +1,117 @@
 import { useState } from 'react'
 import { TextField, Button, Box, Modal } from '@mui/material'
+import { useForm, SubmitHandler } from 'react-hook-form'
 import { Close } from '../../ui/icons/uiKit'
+import { LoadingButtons } from '../button/LoadingButton'
+import { Pattern } from '../../helper/validator/EmailValidation'
+import { ResetPassword } from '../../../api/requests/ResetPassword'
+import { GetResetPasswordText } from '../../data/GetResetPasswordText'
 import contents from '../../styles/AuthLayout.module.css'
+
 
 type Props = {
     open: boolean;
     setOpen: (newType: boolean) => void;
 }
 
+export type Inputs = {
+    email: string
+}
+
 export function ModalResetPassword({open, setOpen}: Props)
 {
-    const modal = {
-        header: 'Восстановить пароль',
-        text: 'Новый пароль будет выслан на вашу электронную почту',
-        textbutton: 'Получить новый пароль'
+    const resetdata = GetResetPasswordText()
+    const { required_email, required_pattern, modal, style } = resetdata
+    const [ send, setSend ] = useState(modal)    
+    const [ error, setError ] = useState<any>(null)    
+    const [ loading, setLoading ] = useState(false)
+
+    const { register, handleSubmit, watch, reset, formState: { errors } } = useForm<Inputs>()
+    const onSubmit: SubmitHandler<Inputs> = async(data) => {
+        setLoading(true)
+        setTimeout(() => setLoading(false), 1300)
+        const pass = await ResetPassword(data)
+        if(pass.is_valid) {
+            setSend({
+                header: pass.header,
+                message: pass.message,
+                textbutton: 'Вернуться',
+                is_valid: pass.is_valid
+            })
+            setError(null)
+            reset()
+        } else {
+            setError(pass)
+        }
     }
-    const [send, setSend] = useState(modal)
-    const style = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: 425,
-        bgcolor: '#0D1535',
-        border: 'none',
-        borderRadius: '12px',
-        boxShadow: 24,
-        p: 3,
-    }
-    
-    
+
     const Restart = () => {
         setSend(modal)
         setOpen(false)
+        setError(null)
     }
-    const isSend = () => setSend({
-        header: 'Отлично! Проверьте почту.',
-        text: 'Мы отправили новый пароль на вашу почту',
-        textbutton: 'Вернуться'
-    })
+
+    const HelperTextError = () => {
+        if(errors.email) return errors.email.message;
+        if (error) return error.message;
+    }
+
 
     return (
         <Modal open={open} className={contents.modal}>
-            <Box sx={style}>
-                <div className={contents.flex}>
-                    <h2>{send.header}</h2>
-                    <p onClick={Restart}>
-                        <Close />
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <Box sx={style}>
+                    <div className={contents.flex}>
+                        <h2>{send.header}</h2>
+                        <p onClick={Restart}>
+                            <Close />
+                        </p>
+                    </div>
+
+                    <p className={contents.description}>
+                        {send.message}
                     </p>
-                </div>
-
-                <p className={contents.description}>
-                    {send.text}
-                </p>
-                <TextField
-                    fullWidth
-                    label="Электронная почта"
-                    defaultValue="" // name@mail.com
-                    placeholder="Ваша электронная почта"
-                />
-                {
-                    send.textbutton === 'Вернуться' ? 
-                        <Button
-                            className={contents.success}
-                            size="large" 
-                            sx={{ mt: 2 }}
-                            variant="contained"
-                            onClick={Restart}
-                        >
-                            {send.textbutton}
-                        </Button> :
-                        <Button
-                            className={contents.info}
-                            size="large" 
-                            sx={{ mt: 2 }}
-                            variant="contained"
-                            onClick={isSend}
-                        >
-                            {send.textbutton}
-                        </Button>
-                }
-
-            </Box>
+                    <TextField
+                        error={errors.email || error ? true : false}
+                        fullWidth
+                        label="Электронная почта"
+                        defaultValue=""
+                        {...register('email', { 
+                            required: required_email,
+                            pattern: {
+                                value: Pattern,
+                                message: required_pattern
+                            }
+                        })}
+                        helperText={HelperTextError()}
+                        placeholder="Ваша электронная почта"
+                        autoComplete='off'
+                    />
+                    {send.textbutton !== 'Вернуться' ?
+                    <Box sx={{ mt: 2 }}>
+                        {loading ?
+                            <LoadingButtons /> :
+                            <Button
+                                size="large"
+                                type="submit"
+                                variant="contained" 
+                                className={contents.info}
+                            >
+                                {send.textbutton}
+                            </Button>
+                        }
+                    </Box> : 
+                    <Button
+                        className={contents.success}
+                        size="large" 
+                        sx={{ mt: 2 }}
+                        variant="contained"
+                        onClick={Restart}
+                    >
+                        {send.textbutton}
+                    </Button>}
+                </Box>                
+            </form>
         </Modal>
     )
 }

@@ -203,8 +203,8 @@ a {
 }
 .label {
     top: 0;
-    right: 0px;
-    padding: 2px 15px;
+    right: 0;
+    /* padding: 1px 13px; */
     position: absolute;
 }
 

@@ -10,6 +10,7 @@ interface ViewButton {
     size?: 'small' | 'medium' | 'large';
     variant?: 'contained' | 'outlined' | 'text';
     color?: 'success' | 'error' | 'info' | 'warning' | string;
+    onClick?: () => void;
 }
 
 interface Block {
@@ -23,7 +24,8 @@ export function Button({
     href = '', 
     size = 'small', 
     variant = 'contained', 
-    color = 'success'
+    color = 'success',
+    onClick
 }: ViewButton)
 {
 

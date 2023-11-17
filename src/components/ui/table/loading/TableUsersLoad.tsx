@@ -1,4 +1,4 @@
-import { TableRow, TableCell, Skeleton } from '@mui/material'
+import { TableRow, TableCell, TableBody, Skeleton } from '@mui/material'
 
 interface Count {
     count: number;
@@ -8,9 +8,9 @@ export function TableUsersLoad({count = 3}: Count)
 {
     const th = {color: '#7C7C7C', padding: '9px', borderBottom: '1px solid #F6F6F6'}
     return (
-        <>
+        <TableBody>
         {[...Array(count)].map((e, i) => (
-            <TableRow>
+            <TableRow key={i}>
                 <TableCell sx={th}>
                     <Skeleton variant="rounded" width={20} height={20} style={{backgroundColor: '#ddd'}} />
                 </TableCell>
@@ -38,6 +38,6 @@ export function TableUsersLoad({count = 3}: Count)
                 </TableCell>
             </TableRow>                        
         ))}
-        </>
+        </TableBody>
     )
 }

@@ -1,53 +1,58 @@
 import { Box, Paper } from '@mui/material'
 import { Status } from '../label/Status'
+import { Person } from '../../../models/Interfaces'
 import contents from '../../styles/MainLayout.module.css'
 
-interface Person {
-    photo: string;
-    name: string;
-    division: string;
-    phone: string;
-    location: string;
-}
 
 interface Card {
     label?: boolean;
-    user: Person | null;
+    person: Person | null;
 }
 
-export function PersonCard({label = true, user = null}: Card)
+export function PersonCard({person = null}: Card)
 {
+    const { photo, name, phone, subdivision, location, status }: any = person
+    const photouser = photo === null ? '/img/user/default.png' : photo
+
     return (
         <Paper sx={{ width: '800px', bgcolor: '#fff', boxShadow: 3, p: 2  }}>
             <Box sx={{ display: 'flex', gap: '20px', justifyContent: 'space-between' }}>
                 <div>
-                    <img src={user?.photo} alt={user?.name} />
+                    <img src={photouser} alt={name} style={{width: '130px', borderRadius: '7px'}} />
                 </div>
                 <div style={{position: 'relative', width: '100%'}}>
                     <ul className={contents['person-card']}>
                         <li>
                             <strong>ФИО</strong>
-                            <p>{user?.name}</p>
+                            <p>{name}</p>
                         </li>
                         <li>
                             <strong>Подразделение</strong>
-                            <p>{user?.division}</p>
+                            <p>{subdivision}</p>
                         </li>
                         <li>
                             <strong>Номер телефона</strong>
-                            <p>{user?.phone}</p>
+                            <p>{phone}</p>
                         </li>
-                        <li>
-                            <strong>Локация</strong>
-                            <p>{user?.location}</p>
-                        </li>
+                        {location &&
+                            <li>
+                                <strong>Локация</strong>
+                                <p>{location}</p>
+                            </li>                        
+                        }
                     </ul>   
                     <div className={contents.label}>
-                        {label && <Status text='На работе' />}
+                        {status && <Status text='На работе' />}
                     </div>
                 </div>
             </Box>
-            <img src="/img/map.png" style={{width: '100%', marginTop: '10px'}} alt="Карта" />           
+            {location &&
+                <img 
+                    src="/img/map.png" 
+                    style={{width: '100%', marginTop: '20px'}} 
+                    alt="Карта" 
+                /> 
+            }
         </Paper>  
     )
 }

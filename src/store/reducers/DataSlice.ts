@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { Arrays, StartInterface, User, OnlyOneUser } from '../../models/Interfaces'
+import { Arrays, StartInterface, User, OnlyOneUser, Handbook } from '../../models/Interfaces'
 
 
 interface GetState {
-    data: StartInterface[] | User[] | Arrays[] | OnlyOneUser[];
+    data: StartInterface[] | User[] | Arrays[] | OnlyOneUser[] | Handbook[] | any;
     isLoading: boolean;
     isOpen: boolean;
     error: string;
@@ -42,6 +42,16 @@ export const dataSlice = createSlice({
             state.data = action.payload
         },
         getAllUsers(state, action: PayloadAction<Arrays[]>) {
+            state.isLoading = false
+            state.error = ''
+            state.data = action.payload
+        },
+        getHandbook(state, action: PayloadAction<Handbook[]>) {
+            state.isLoading = false
+            state.error = ''
+            state.data = action.payload
+        },
+        deleteHandbook(state, action: PayloadAction<Arrays[]>) {
             state.isLoading = false
             state.error = ''
             state.data = action.payload

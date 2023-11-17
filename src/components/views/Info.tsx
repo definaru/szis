@@ -28,10 +28,9 @@ export function Info()
                     <LeftMenu />
                 </div>
                 <div>
-                    <SearchForm />
                     <Box sx={{ display: 'grid' }}>
                         <TableReference row='Info' bottom={false} />
-                        <PersonCard label={false} user={user} />
+                        {/* <PersonCard label={false} user={user} /> */}
                     </Box>
                 </div>
             </Box>

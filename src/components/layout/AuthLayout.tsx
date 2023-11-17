@@ -2,7 +2,7 @@ import { Run } from '../../api/Run'
 import { Link } from 'react-router-dom'
 import React, { useState, useEffect } from 'react'
 import { Gerb, Guard } from '../ui/logo/images'
-import { Card, CardContent, CardActions, AppBar, Container, Box } from '@mui/material'
+import { Card, CardContent, CardActions, AppBar, Container, Box, Alert } from '@mui/material'
 import { useAppDispatch, useAppSelector } from '../../hooks/redux'
 import { LoadingButtons } from '../ui/button/LoadingButton'
 import { GetHome } from '../../api/requests/GetHome'
@@ -20,7 +20,7 @@ export function AuthLayout({children, title = 'Loading...'}: Layout) {
     const api_uri = Run()
     const { backend_url } = api_uri[0]
     const { data, isLoading, error } = useAppSelector(state => state.startReducer)
-    const [ url, setUrl ] = useState<string>(backend_url)
+    const [ url, setUrl ] = useState<string>('')
     const { name, description, version, domain, info, api, support }: any = data
 
     useEffect(() => {
@@ -28,13 +28,17 @@ export function AuthLayout({children, title = 'Loading...'}: Layout) {
     }, [])
 
     useEffect(() => {
+        setUrl(backend_url)
         dispatch(GetHome(url))
     }, [url])
 
     return (
         <div className={`${contents.app} ${contents['bg-image']}`}>
 
-            {error ? error : 
+            {error ? 
+            <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%'}}>
+                <Alert severity="error">{error}</Alert>
+            </Box> : 
             <>          
                 <AppBar color="transparent" position="fixed" className={contents.nav}>
                     <div className={contents.header}>
@@ -63,6 +67,7 @@ export function AuthLayout({children, title = 'Loading...'}: Layout) {
                                         <a href={`mailto:${support.email}`}>{support.email}</a>
                                     </p>                            
                                 }
+                                <small className={contents['footer-title']}>&#160; Версия: {version}</small> 
                             </CardActions>
                         </Card>
                         {/* <pre>{JSON.stringify(data, null, 4)}</pre> */}

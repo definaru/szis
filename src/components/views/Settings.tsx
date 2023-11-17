@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Run } from '../../api/Run'
 import { Button } from '../ui/button/Button'
 import { MainLayout } from '../layout/MainLayout'
-import { Paper, Typography, Box, FormControl, MenuItem, Skeleton } from '@mui/material'
+import { Paper, Typography, Box, FormControl, MenuItem, Skeleton, Tooltip, IconButton, Alert } from '@mui/material'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import { WarningAlert, PersonLock, PencilEdit } from '../ui/icons/uiKit'
 import { useAppDispatch, useAppSelector } from '../../hooks/redux'
@@ -17,22 +17,28 @@ export function Settings()
     const api_uri = Run()
     const { backend_url, preffix } = api_uri[0]
     const { data, isLoading, error } = useAppSelector(state => state.startReducer)
-    const { id, photo, username, first_name, last_name, email, phones, position, is_superuser, is_staff }: any = data
-
-    // const [ url, setUrl ] = useState<string>(backend_url+preffix+'me/1622c816ff7fa1d856bea14d8297eec1ff85917a')
-    const [ user, setUser ] = useState<string>(backend_url+preffix+'users/1')
-    const [ age, setAge ] = useState('Пользователь')
+    const { login } = useAppSelector((state) => state.authReduser)
+    const { id, photo, username, first_name, last_name, email, phones, position, groups, is_superuser, is_staff }: any = data
+    const { token, user_id } = JSON.parse(login) || {}
     const stocke = {display: 'flex', gap: '10px', alignItems: 'center', margin: 0}
-    const photouser = photo === null ? '/img/user/default.png' : photo?.avatar
-    const phone: string = phones ? phones[0].phone : ''
+    const photouser = photo === null ? '/img/user/default.png' : photo?.avatar    
+
+    const group = groups ? groups.map((item: string | any) => item.name ) : ''
+    const [ user, setUser ] = useState<string>('')
+    const [ role, setRole ] = useState(group)
+
+    
 
     const handleChange = (event: SelectChangeEvent) => {
-        setAge(event.target.value);
+        setRole(event.target.value);
     }
 
     useEffect(() => {
-        dispatch(GetUserOnID(user))
-    }, [user])
+        if(token && user_id) {
+            setUser(backend_url+preffix+'users/'+user_id)
+            dispatch(GetUserOnID(user, token))
+        }
+    }, [user, user_id, role])
 
     return (
         <MainLayout title='Настройки'>
@@ -40,10 +46,12 @@ export function Settings()
                 Профиль пользователя
             </Typography>
             <hr className={contents['hr-line']} />
+            {error && <Alert severity="error">{error}</Alert>}
+
             <Paper sx={{ width: '50%', bgcolor: '#fff', boxShadow: 3, p: 2  }}>
                 <Box sx={{display: 'flex', gap: 3, color: '#000'}}>
                     {isLoading ?
-                        <Skeleton variant="text" width={180} height={217} style={{ backgroundColor: '#ddd' }} /> :
+                        <Skeleton variant="text" width={180} height={317} style={{ backgroundColor: '#ddd' }} /> :
                         <img src={photouser} alt={first_name} style={{width: '180px'}} />
                     }
                     <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '10px'}}>
@@ -51,42 +59,56 @@ export function Settings()
                             <Skeleton variant="rounded" sx={{ fontSize: '1em' }} width={'60%'} style={{ backgroundColor: '#ddd' }} /> :
                             <strong>@{username}</strong>
                         }
-                        <p style={stocke}>
-                            <a href={`mailto:${email}`}>{email}</a> 
-                            {is_staff === false &&
-                                <span title='E-mail не подтверждён' style={{cursor: 'help'}}>
-                                    <WarningAlert color='#ff1a2e' />
-                                </span>                            
-                            }
-                            <a href="#"><PencilEdit /></a>
-                        </p>
-                        {phones ? 
+                        {isLoading ?
+                            <Skeleton variant="rounded" sx={{ fontSize: '1em' }} width={'60%'} style={{ backgroundColor: '#ddd' }} /> :
                             <p style={stocke}>
-                                <PhoneFormat phone={phone} />
-                                <span title='Номер телефона не подтверждён' style={{cursor: 'help'}}>
-                                    <WarningAlert color='#ff1a2e' />
-                                </span>
+                                <a href={`mailto:${email}`}>{email}</a> 
+                                {is_staff === false &&
+                                    <span title='E-mail не подтверждён' style={{cursor: 'help'}}>
+                                        <WarningAlert color='#ff1a2e' />
+                                    </span>                            
+                                }
                                 <a href="#"><PencilEdit /></a>
-                            </p> :
-                            <p>Нет данных</p>                       
+                            </p>
                         }
+                        {phones ? phones.slice(0, -1).map((item: any, i: number) => (
+                            <p style={stocke} key={i}>
+                                <PhoneFormat phone={item.phone} /> <small>{item.type}</small>
+                                <Tooltip title='Номер телефона не подтверждён' style={{cursor: 'help'}} followCursor>
+                                    <IconButton>
+                                        <WarningAlert color='#ff1a2e' />
+                                    </IconButton>
+                                </Tooltip>
+                                <a href="#"><PencilEdit /></a>
+                            </p>
+                        )) : 'Телефон не указан'}
                         <p style={stocke}>
-                            <strong>OOO "Организация"</strong> 
-                            <span>/ менеджер</span>
+                            <strong>{`OOO "Организация"`}</strong>
+                            {position ? position.map((item: any, i: number) => (
+                                <span key={i}>/ {item}</span>
+                            )) : ''}
                             <a href="#"><PencilEdit /></a>
                         </p>
-                        {is_superuser && 
+                        {is_superuser ? 
                         <div style={stocke}>
                             <PersonLock color='#006af2' /> 
                             <FormControl variant="standard" sx={{ minWidth: 120 }}>
-                                <Select value={age} onChange={handleChange} label="Права и роли">
+                                <Select value={role} onChange={handleChange} label="Права и роли">
                                     <MenuItem value={'Пользователь'}>Пользователь</MenuItem>
                                     <MenuItem value={'Оператор'}>Оператор</MenuItem>
                                     <MenuItem value={'Модератор'}>Модератор</MenuItem>
                                     <MenuItem value={'Администратор'}>Администратор</MenuItem>
                                 </Select>
                             </FormControl>
-                        </div>}
+                        </div> : ''} 
+                        {groups ? groups.map( (item: any, i: number) => ( 
+                            <div key={i} style={stocke}>
+                                <PersonLock color='#006af2' />
+                                <Tooltip style={{cursor: 'help'}} title='права и роли' followCursor>
+                                    {item.name}
+                                </Tooltip>                                    
+                            </div>
+                        )) : '...'}
                     </Box>                    
                 </Box>
                 <hr className={contents['hr-line']} />
@@ -129,8 +151,6 @@ export function Settings()
             <Box sx={{display: 'flex', width: '100%', mt: 3}}>
                 <Button color='info'>Сохранить изменения</Button>                
             </Box>
-            {/* {error ? error : 
-            <pre>{JSON.stringify(data, null, 4)}</pre>} */}
         </MainLayout>
     )
 } 

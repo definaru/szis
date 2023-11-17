@@ -2,7 +2,7 @@ export function GetDataReference()
 {
     return [
         {
-            id: '01',
+            id: '1',
             status: 'м-р',
             name: 'Иванов Филипп Семёнович',
             phone: '+7(495)377-04-31',
@@ -10,7 +10,7 @@ export function GetDataReference()
             avatar: '#A1F649'
         },
         {
-            id: '02',
+            id: '2',
             status: 'к-н',
             name: 'Яковлев Григорий Елисеевич',
             phone: '+7(495)083-56-97',
@@ -18,7 +18,7 @@ export function GetDataReference()
             avatar: '#445490'
         },
         {
-            id: '03',
+            id: '3',
             status: 'л-т',
             name: 'Григорьева Елена Кирилловна',
             phone: '+7(495)672-32-75',

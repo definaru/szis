@@ -1,5 +1,3 @@
-import { IData } from './IData'
-
 export interface Support {
     text: string;
     phone: string;
@@ -11,7 +9,6 @@ export interface Support {
 //     previous?: null;
 //     results: never[]
 //     // Array<[]> 
-//     // Array<IData[]>
 //     // extends Array<[]>
 //     //  
 // }
@@ -20,7 +17,7 @@ export interface Characters {
     count?: number
     next?: string | null;
     previous?: string | null;
-    results: IData[] | StartInterface[]
+    results: StartInterface[]
 }
 
 export interface Arrays {
@@ -38,6 +35,18 @@ export interface StartInterface {
     info: string;
     api: string;
     support: Support[];
+}
+
+export interface Handbook {
+    id: number;
+    rank: string;
+    user: number;
+    photo: string | Blob;
+    name: string;
+    phone: string;
+    subdivision: string;
+    location: string;
+    status: boolean;
 }
 
 export interface User {
@@ -63,4 +72,16 @@ export interface OnlyOneUser {
     phones: [];
     position: string[];
     is_superuser: boolean;
+}
+
+export interface Person {
+    id: number;
+    rank: string;
+    user: number;
+    photo: string;
+    name: string;
+    phone: string;
+    subdivision: string;
+    location: string;
+    status: boolean
 }

@@ -14,3 +14,8 @@ https://leetcode-opensource.github.io/react-simple-resizer/ - Демонстра
 
 git clone --branch=dev https://github.com/definaru/szis.git
 
+#Use react-hook-form
+---
+https://www.freecodecamp.org/news/how-to-create-forms-in-react-using-react-hook-form/
+https://blog.logrocket.com/react-hook-form-complete-guide/
+https://blog.logrocket.com/using-material-ui-with-react-hook-form/

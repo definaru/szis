@@ -1,0 +1,23 @@
+.flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.flex, h2, p {
+    margin: 0;
+}
+
+form {
+    display: grid;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.btn-info {
+    color: #ffffff !important;
+    background-color: #006AF2 !important;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 10px !important;
+}

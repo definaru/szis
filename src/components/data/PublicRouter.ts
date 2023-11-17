@@ -1,6 +1,5 @@
 import { Home } from '../views/Home'
 import { Locator } from '../views/Locator'
-import { Characters } from '../views/Characters'
 import { NoMatch } from '../views/NoMatch'
 import { Scenario } from '../views/Scenario'
 import { Dashboard } from '../views/Dashboard'
@@ -54,10 +53,6 @@ export function PublicRouter()
         {
             path: '/users',
             element: Users
-        },
-        {
-            path: '/character/:name',
-            element: Characters
         },
         {
             path: '*',

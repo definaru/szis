@@ -15,9 +15,11 @@ export function TableUsers()
     const api_uri = Run()
     const { backend_url, preffix } = api_uri[0]
     const { data, isLoading, error } = useAppSelector(state => state.startReducer)
-    const [ url, setUrl ] = useState<string>(backend_url+preffix+'users/')
+    const { login } = useAppSelector((state) => state.authReduser)
+    const [ url, setUrl ] = useState<string>('')
 
     const {count, next, previous, results}: any = data
+    const { token } = JSON.parse(login) || {}
 
     const th = {color: '#7C7C7C', padding: '9px', borderBottom: '1px solid #F6F6F6'}
     const tablehead = {color: '#000', padding: '4px 9px', fontWeight: 600, borderBottom: '1px solid #F6F6F6', fontSize: '13px'}
@@ -57,11 +59,13 @@ export function TableUsers()
             size: '' 
         }
     ]
-    //const body = GetDataUsers()
 
     useEffect(() => {
-        dispatch(GetAllUsers(url))
-    }, [url])
+        setUrl(backend_url+preffix+'users/')
+        if(token) {
+            dispatch(GetAllUsers(url, token))            
+        }
+    }, [url, token])
 
     return (
         <TableContainer sx={{width: '100%', mt: 2}}>
@@ -98,32 +102,38 @@ export function TableUsers()
                                     </Box>
                                 </TableCell> 
                                 <TableCell sx={th}>
-                                    {row.is_superuser && <Chip label='Администратор' color="warning" />}
+                                    {
+                                        row.groups[0] && 
+                                        <Chip label={row.groups[0].name} color={
+                                            row.groups[0].name === 'Администратор' ? 'warning' : 'info'
+                                        } />
+                                    }
                                 </TableCell>
                                 <TableCell sx={th}>
-                                    {row.position[0]}
+                                    {row.position[0] ? row.position[0] : '-- // --'}
                                 </TableCell>
                                 <TableCell sx={th}>
                                     <a href={`mailto:${row.email}`} target='_blank'>{row.email}</a>
                                 </TableCell>   
                                 <TableCell sx={th}>
+                                    {row.phones[0] ?
                                     <Box sx={{display: 'flex', alignItems: 'center', gap: 2}}>
                                         <PhoneIcon color='success' />
                                         <PhoneFormat phone={row.phones[0].phone} />
-                                        {/* <a href="#">{row.phones[0].phone}</a> */}
                                         {row.phones[1] && <span>доп: {row.phones[1].phone}</span>}
-                                    </Box>
+                                    </Box> : '-- // --'}
                                 </TableCell>
                                 <TableCell sx={th}>
+                                    {row.phones[0] ?
                                     <Typography variant='h6'>
                                         <a href="#">{row.phones[0].section[0].type}</a>
-                                    </Typography>
+                                    </Typography> : '-- // --'}
                                 </TableCell>  
                             </TableRow>
                         )) : ''}
                         </>
                     }
-                </TableBody> 
+                </TableBody>
             </Table>
             }
             {/* <pre>{JSON.stringify(results, null, 4)}</pre> */}
