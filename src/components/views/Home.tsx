@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AuthLayout } from '../layout/AuthLayout'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { TextField, FormControlLabel, Checkbox, Button, Alert } from '@mui/material'
+import { TextField, FormControlLabel, Checkbox, Button, Alert, Box } from '@mui/material'
 import { LoadingButtons } from '../ui/button/LoadingButton'
 import { ModalResetPassword } from '../ui/modal/ModalResetPassword'
 import { GetAuthUser } from '../../api/requests/GetAuthUser'
@@ -55,6 +55,7 @@ export function Home()
                         placeholder="Ваш логин"
                         {...register('email', { required: true })}
                         helperText={errors.email && 'Введите ваш логин'}
+                        autoComplete='off'
                     />                    
                 </div>
                 <div>
@@ -79,18 +80,24 @@ export function Home()
                                 type="submit"
                                 variant="contained" 
                                 className={contents['btn-info']}
+                                sx={{px: 5, textTransform: 'capitalize'}}
                             >
-                                &#160;&#160;&#160;&#160;Войти&#160;&#160;&#160;&#160;
+                                Войти
                             </Button> 
                         }
                         <FormControlLabel
                             {...register("remember")}
-                            control={<Checkbox color="info" />} 
+                            control={<Checkbox sx={{
+                                color: '#ddd',
+                                '& svg.MuiSvgIcon-root path': {
+                                  fill: '#006AF2  !important',
+                                },
+                              }} />} 
                             className={contents.checkbox} 
                             label="Запомнить меня" 
                         />                          
                     </div>
-                    <p className={contents['text-center']}>
+                    <Box sx={{py: 2, mt: 2, textAlign: 'center'}}>
                         <span 
                             style={{cursor: 'pointer'}} 
                             onClick={() => setOpen(true)}
@@ -98,7 +105,7 @@ export function Home()
                         >
                             Восстановление пароля
                         </span>
-                    </p>                
+                    </Box>          
                 </div>
             </form>
             <ModalResetPassword open={open} setOpen={setOpen} />

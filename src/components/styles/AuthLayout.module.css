@@ -95,13 +95,12 @@ h3 {
 }
 .checkbox {
     font-size: 10px !important;
-    color: #7C7C7C;
     margin-right: 0 !important;
 }
 .box {
     width: 45%;
     margin: auto;
-    padding: 25px 0;
+    padding-top: 25px;
     display: grid;
     gap: 15px;
 }

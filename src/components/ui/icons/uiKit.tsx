@@ -1,11 +1,9 @@
-import React from 'react'
-
-export function Close()
+export function Close({color = 'currentColor', size = '20'})
 {
     return (
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M15.625 4.375L4.375 15.625" stroke="#B9B9B9" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M15.625 15.625L4.375 4.375" stroke="#B9B9B9" strokeLinecap="round" strokeLinejoin="round"/>
+        <svg width={size} height={size} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15.625 4.375L4.375 15.625" stroke={color} strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M15.625 15.625L4.375 4.375" stroke={color} strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
     )
 }

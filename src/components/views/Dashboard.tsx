@@ -52,7 +52,6 @@ export function Dashboard()
                         <Typography variant="h4" sx={{ color: '#1C1C1C' }}>11:54:33</Typography>
                     </Box>                  
                 </div>
-
             </Box>
         </MainLayout>
     )

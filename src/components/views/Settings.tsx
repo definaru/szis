@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { Run } from '../../api/Run'
 import { Button } from '../ui/button/Button'
 import { MainLayout } from '../layout/MainLayout'
 import { Paper, Typography, Box, FormControl, MenuItem, Skeleton, Tooltip, IconButton, Alert } from '@mui/material'
@@ -14,31 +13,21 @@ import contents from '../styles/MainLayout.module.css'
 export function Settings()
 {
     const dispatch = useAppDispatch()
-    const api_uri = Run()
-    const { backend_url, preffix } = api_uri[0]
     const { data, isLoading, error } = useAppSelector(state => state.startReducer)
-    const { login } = useAppSelector((state) => state.authReduser)
     const { id, photo, username, first_name, last_name, email, phones, position, groups, is_superuser, is_staff }: any = data
-    const { token, user_id } = JSON.parse(login) || {}
     const stocke = {display: 'flex', gap: '10px', alignItems: 'center', margin: 0}
     const photouser = photo === null ? '/img/user/default.png' : photo?.avatar    
 
     const group = groups ? groups.map((item: string | any) => item.name ) : ''
-    const [ user, setUser ] = useState<string>('')
     const [ role, setRole ] = useState(group)
-
-    
 
     const handleChange = (event: SelectChangeEvent) => {
         setRole(event.target.value);
     }
 
     useEffect(() => {
-        if(token && user_id) {
-            setUser(backend_url+preffix+'users/'+user_id)
-            dispatch(GetUserOnID(user, token))
-        }
-    }, [user, user_id, role])
+        dispatch(GetUserOnID())
+    }, [role])
 
     return (
         <MainLayout title='Настройки'>

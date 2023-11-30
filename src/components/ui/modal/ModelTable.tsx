@@ -1,26 +1,28 @@
 import { useState } from 'react'
 import { Close } from '../../ui/icons/uiKit'
 import { GetTableRef } from '../../data/GetTableRef'
-import { TextField, Box, Modal, Button, Alert } from '@mui/material'
+import { Box, Modal, Button, Alert } from '@mui/material'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { PutHandbook } from '../../../api/requests/PutHandbook'
 import { Handbook } from '../../../models/Interfaces'
 import modal from '../modal/Modal.module.css'
+import { FormInputDropdown } from '../select/FormInputDropdown'
+import { FormInputText } from '../input/FormInputText'
 
 
 type Props = {
     open: boolean;
-    contact: Handbook[];
+    contact: Handbook | any;
     setOpen: (newType: boolean) => void;
 }
 
 export function ModelTable({open, contact, setOpen}: Props)
 {
-    const {style} = GetTableRef()
+    const {style, type_division, type_rank} = GetTableRef()
     const [responce, setResponce] = useState(false)
-    const { register, handleSubmit, watch, formState: { errors } } = useForm<Handbook>()
+    const { register, handleSubmit, watch, control, formState: { errors } } = useForm<Handbook>()
 
-    const {id, rank, user, photo, name, phone, subdivision, location, status}: any = contact || {}
+    const {id, rank, user, photo, name, phone, division, location, status}: any = contact
 
     const onSubmit: SubmitHandler<Handbook> = async(data) => {
         if (data) {
@@ -40,17 +42,19 @@ export function ModelTable({open, contact, setOpen}: Props)
                         <Close />
                     </p>
                 </div>
-                {contact ?                 
+                
+                {/* <pre>{JSON.stringify(contact, null, 4)}</pre> */}
+                {/* {contact ? : 'Загрузка...'} */}
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div style={{display: 'none'}}>
-                        <TextField
+                        <input
                             type="hidden"
                             defaultValue={id}
                             {...register('id')}
                         />                        
                     </div>
                     <div style={{display: 'none'}}>
-                        <TextField
+                        <input
                             type="hidden"
                             defaultValue={photo}
                             {...register('photo')}
@@ -64,78 +68,73 @@ export function ModelTable({open, contact, setOpen}: Props)
                         {responce && <Alert severity="success">Запись успешно обновлена</Alert>}
                     </div>                     
                     <div>
-                        <TextField
-                            error={errors.rank ? true : false}
-                            fullWidth
-                            label="Выберите звание" 
-                            variant="outlined"
+                        <FormInputDropdown
+                            name={'rank'}
+                            control={control}
                             defaultValue={rank}
-                            placeholder="Выберите звание"
-                            {...register('rank', { required: true })}
-                            helperText={errors.rank && 'Выберите звание'}
-                        />                        
+                            //rules={{ required: 'Выберите звание' }}
+                            label={"Звания:"}
+                            list={type_rank}
+                        />
                     </div>
                     <div style={{display: 'none'}}>
-                        <TextField
+                        <input
                             type="hidden"
                             defaultValue={user}
                             {...register('user')}
                         />                        
                     </div>
                     <div>
-                        <TextField
-                            error={errors.name ? true : false}
-                            fullWidth
-                            label="Ф.И.О." 
-                            variant="outlined"
+                        <FormInputText
+                            name={'name'}
+                            control={control}
+                            label={"Ф.И.О.:"}
                             defaultValue={name}
-                            {...register('name', { required: true })}
-                            helperText={errors.name && 'Введите имя контакта'}
-                            placeholder="Ваше имя"
-                            autoComplete='off'
+                            rules={{ required: 'Введите имя контакта' }}
                         />
                     </div>
                     <div>
-                        <TextField
-                            error={errors.phone ? true : false}
-                            fullWidth
-                            label="Телефоны" 
-                            variant="outlined"
+                        <FormInputText
+                            name={'phone'}
+                            control={control}
                             defaultValue={phone}
-                            {...register('phone', { required: true })}
-                            helperText={errors.phone && 'Номер телефона'}
-                            placeholder="Номер телефона"
-                            autoComplete='off'
-                        />                        
+                            rules={
+                                { 
+                                    required: 'Укажите номер телефона контакта',
+                                    pattern: {
+                                        value: /[\d+]/,
+                                        message: 'Допустимы только цифры и знак "+"'
+                                    },
+                                    maxLength: {
+                                        value: 12,
+                                        message: "В телефоне не должно быть более 12 символов"
+                                    }
+                                }
+                            }
+                            label={"Номер телефона:"}
+                        />                     
                     </div>
                     <div>
-                        <TextField
-                            error={errors.subdivision ? true : false}
-                            fullWidth
-                            label="Подразделение" 
-                            variant="outlined"
-                            defaultValue={subdivision}
-                            {...register('subdivision', { required: true })}
-                            helperText={errors.subdivision && 'Выбрать подразделение'}
-                            placeholder="Выбрать подразделение"
-                            autoComplete='off'
-                        />                        
+                        <FormInputDropdown
+                            name={'division'}
+                            control={control}
+                            defaultValue={division}
+                            rules={{ required: 'Выберите подразделение' }}
+                            label={"Подразделение:"}
+                            list={type_division}
+                        />                      
                     </div>
                     <div>
-                        <TextField
-                            error={errors.location ? true : false}
-                            fullWidth
-                            label="Локация" 
-                            variant="outlined"
+                        <FormInputText
+                            name={'location'}
+                            control={control}
+                            label={"Локация:"}
                             defaultValue={location}
-                            {...register('location', { required: true })}
-                            helperText={errors.location && 'Напишите адрес'}
-                            placeholder="Напишите адрес"
-                            autoComplete='off'
-                        />                        
+                            rules={{ required: 'Напишите адрес' }}
+                        />                     
                     </div>
                     <div style={{display: 'none'}}>
-                        <TextField
+                        <input
                             type="hidden"
                             defaultValue={status}
                             {...register('status')}
@@ -151,7 +150,7 @@ export function ModelTable({open, contact, setOpen}: Props)
                             Редактировать
                         </Button>
                     </div>
-                </form> : 'Загрузка...'}
+                </form>
             </Box>
         </Modal>
     )

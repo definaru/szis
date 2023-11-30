@@ -2,22 +2,18 @@ import axios from 'axios'
 import { AppDispatch } from '../../store/store'
 import { dataSlice } from '../../store/reducers/DataSlice'
 import { Handbook } from '../../models/Interfaces'
-import { Run } from '../Run'
+import { Authtification } from '../context/Authtification'
 
-
-const user = JSON.parse(JSON.stringify(localStorage.getItem('auth')))
-const token = JSON.parse(user)    
-const api_uri = Run()
-const { backend_url, preffix } = api_uri[0]
+const auth = Authtification()
 
 export const GetHandbook = () => async(dispatch: AppDispatch) => {
     try {
         dispatch(dataSlice.actions.isLoading())
-        const url = `${backend_url}${preffix}book/`
+        const url = `${process.env.REACT_APP_BASE_URL}${process.env.REACT_APP_PREFFIX}/book/`
         const responce = await axios.get<Handbook[]>(url, {
             headers: {
                 "Content-type": "application/json",
-                'Authorization': `Token ${token.token}`
+                'Authorization': `Token ${auth.token}`
             }
         })
         dispatch(dataSlice.actions.getHandbook(responce.data))
@@ -28,11 +24,11 @@ export const GetHandbook = () => async(dispatch: AppDispatch) => {
 
 export const DeleteHandbook = (id: string) => async(dispatch: AppDispatch) => {
     try {    
-        const url = `${backend_url}${preffix}book/${id}/`
+        const url = `${process.env.REACT_APP_BASE_URL}/book/${id}/`
         const responce = await axios.delete<Handbook[]>(url, {
             headers: {
                 "Content-type": "application/json",
-                'Authorization': `Token ${token.token}`
+                'Authorization': `Token ${auth.token}`
             }
         })
         dispatch(dataSlice.actions.getHandbook(responce.data))

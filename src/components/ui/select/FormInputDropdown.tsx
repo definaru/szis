@@ -6,16 +6,17 @@ type Props = {
     name: string;
     control: any;
     rules?: any;
+    defaultValue?: string; 
     label: string;
     list: [] | any;
 }
 
-export function FormInputDropdown({ name, control, rules, label, list }: Props)
+export function FormInputDropdown({ name, control, rules, defaultValue = '', label, list }: Props)
 {
     const MenuProps = {
         PaperProps: {
             style: {
-                color: '#000', 
+                //color: '#000', 
                 border: '1px solid #ddd',
                 maxHeight: 230
             }
@@ -27,7 +28,7 @@ export function FormInputDropdown({ name, control, rules, label, list }: Props)
             name={name}      
             control={control}
             rules={rules}
-            defaultValue={''}
+            defaultValue={defaultValue}
             render={({ 
                 field: { onChange, value },
                 fieldState: { error },
@@ -38,7 +39,7 @@ export function FormInputDropdown({ name, control, rules, label, list }: Props)
                         label={label}
                         MenuProps={MenuProps} 
                         onChange={onChange} 
-                        value={value} 
+                        value={defaultValue} 
                         sx={{ '.MuiSelect-select': { borderBottom: 'none !important' } }}
                     >
                         <MenuItem value={''} disabled>Выберите звание...</MenuItem>

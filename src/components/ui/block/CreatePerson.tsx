@@ -12,12 +12,13 @@ import AddAPhotoIcon from '@mui/icons-material/AddAPhoto'
 
 
 type Props = {
-    open: boolean;
+    //open: boolean;
+    list: any;
     setOpen: (newType: boolean) => void;
-    setAdd: (newType: any) => void;
+    setList: (newType: any) => void;
 }
 
-export function CreatePerson({open, setOpen, setAdd}: Props)
+export function CreatePerson({list, setOpen, setList}: Props)
 {
     const form = GetTableRef()
     const [modified, setModified] = useState<any | null>()
@@ -36,7 +37,8 @@ export function CreatePerson({open, setOpen, setAdd}: Props)
         if (data) {
             const bookdata = await PostHandbook(data, modified)
             //console.log('Submit Post Handbook:', bookdata)
-            setAdd(bookdata)
+            //setList(bookdata)
+            setList([...list, bookdata])
             reset()
             setOpen(false)
         }
@@ -45,6 +47,8 @@ export function CreatePerson({open, setOpen, setAdd}: Props)
     return (
         <ThemeProvider theme={theme}>
             <Paper sx={{ width: '800px', bgcolor: '#fff', boxShadow: 3, p: 2  }}>
+            
+                {/* <pre>{JSON.stringify(list, null, 4)}</pre> */}
                 <Box sx={{ display: 'flex', gap: '20px', justifyContent: 'space-between' }}>
                     <strong>Создаём нового пользователя</strong>
                     <div style={{cursor: 'pointer'}}>
@@ -71,9 +75,16 @@ export function CreatePerson({open, setOpen, setAdd}: Props)
                                     }} 
                                 /> : 
                                 <div style={{display: 'flex', alignItems: 'center', gap: '15px'}}>
-                                    <IconButton sx={{p: 2}}>
+                                    <Box sx={{bgcolor: '#ddd', p: 2,
+                                        borderRadius: '50em',
+                                        width: '80px',
+                                        height: '80px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}>
                                         <AddAPhotoIcon sx={{ fontSize: 40 }} />
-                                    </IconButton>
+                                    </Box>
                                     <div>
                                         Выберите фотографию<br />
                                         <small><i style={{color: '#999'}}>( Допустимый формат: .jpg, .jpeg, .png )</i></small>
@@ -91,13 +102,28 @@ export function CreatePerson({open, setOpen, setAdd}: Props)
                         }
                     </Box>
                     <div style={{width: '100%'}}>
-                        <FormInputDropdown
+                        {/* <FormInputDropdown
                             name={'rank'}
                             control={control}
-                            rules={{ required: 'Выберите звание' }}
+                            //rules={{ required: 'Выберите звание' }}
                             label={"Звание:"}
                             list={type_rank}
-                        />
+                        /> */}
+                        <select 
+                            {...register('rank')} 
+                            defaultValue={''} 
+                            style={{
+                                border: '1px solid #c4c4c4',
+                                width: '100%',
+                                borderRadius: '4px',
+                                padding: '20px'
+                            }}
+                        >
+                            <option value={''} disabled>Выберите звание...</option>
+                            {type_rank?.map((item, i) => (
+                                <option value={item.key} key={1}>{item.value}</option>
+                            ))}
+                        </select>
                     </div>   
                     <div>
                         <FormInputText
@@ -126,16 +152,30 @@ export function CreatePerson({open, setOpen, setAdd}: Props)
                             }
                             label={"Номер телефона: (+79990009900)"}
                         />
-                    
                     </div>
                     <div>
-                        <FormInputDropdown
-                            name={'subdivision'}
+                        {/* <FormInputDropdown
+                            name={'division'}
                             control={control}
                             rules={{ required: 'Выберите подразделение' }}
                             label={"Подразделение:"}
                             list={type_division}
-                        />
+                        /> */}
+                        <select 
+                            {...register('division')} 
+                            defaultValue={''} 
+                            style={{
+                                border: '1px solid #c4c4c4',
+                                width: '100%',
+                                borderRadius: '4px',
+                                padding: '20px'
+                            }}
+                        >
+                            <option value={''} disabled>Выберите подразделение...</option>
+                            {type_division?.map((item, i) => (
+                                <option value={item.key} key={1}>{item.value}</option>
+                            ))}
+                        </select>
                     </div>
                     <div>
                         <FormInputText

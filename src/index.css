@@ -5,10 +5,10 @@
 svg.MuiSvgIcon-root path {
     fill: #a7a4a4 !important;
 }
-.MuiSelect-select {
+/* .MuiSelect-select {
     color: #000 !important;
     border-bottom: 1px dashed #555 !important;
-}
+} */
 .MuiInput-input {
     display: flex !important;
     align-items: center;

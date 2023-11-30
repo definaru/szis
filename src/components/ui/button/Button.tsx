@@ -13,10 +13,6 @@ interface ViewButton {
     onClick?: () => void;
 }
 
-interface Block {
-    color: string;
-}
-
 export function Button({
     children,
     fullWidth = false, 

@@ -1,0 +1,33 @@
+.form {
+    display: grid;
+    gap: 20px;
+}
+.field {
+    display: grid;
+}
+.form-control {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px 15px;
+    outline: none;
+}
+.radio-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+label {
+    font-weight: 700;
+    font-size: 12px;
+}
+.error {
+    color: crimson;
+    font-family: system-ui;
+}
+
+.close {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+}

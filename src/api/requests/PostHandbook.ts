@@ -1,27 +1,24 @@
 import axios from 'axios'
-import { Run } from '../Run'
 import { Handbook } from '../../models/Interfaces'
+import { Authtification } from '../context/Authtification'
 
-
-const user = JSON.parse(JSON.stringify(localStorage.getItem('auth')))
-const token = JSON.parse(user)
 
 export function PostHandbook(data: Handbook, image: string | any)
 {
-    const api_uri = Run()
-    const { backend_url, preffix } = api_uri[0]
-    const url = backend_url+preffix+'book/'
-
+    const auth = Authtification()
+    const url = `${process.env.REACT_APP_BASE_URL}${process.env.REACT_APP_PREFFIX}/book/`
+    console.log('Authtification:', auth)
+    console.table(data, {...image, url})
     if(data) {
         const Book = async() => {
             try {
                 const form = new FormData();
                 form.append('rank', data.rank);
-                form.append('user', String(token.user_id));
-                form.append('photo', image); // data.photo
+                form.append('user', String(auth.user_id));
+                //image && form.append('photo', image); // data.photo
                 form.append('name', data.name);
                 form.append('phone', data.phone);
-                form.append('subdivision', data.subdivision);
+                form.append('division', data.division);
                 form.append('location', data.location);
                 form.append('status', String(data.status));
 
@@ -29,7 +26,7 @@ export function PostHandbook(data: Handbook, image: string | any)
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'multipart/form-data charset=UTF-8',
-                        'Authorization': `Token ${token.token}`
+                        'Authorization': `Token ${auth.token}`
                     }
                 })
                 return await responce.data

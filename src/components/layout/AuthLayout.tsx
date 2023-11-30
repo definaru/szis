@@ -1,6 +1,5 @@
-import { Run } from '../../api/Run'
 import { Link } from 'react-router-dom'
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { Gerb, Guard } from '../ui/logo/images'
 import { Card, CardContent, CardActions, AppBar, Container, Box, Alert } from '@mui/material'
 import { useAppDispatch, useAppSelector } from '../../hooks/redux'
@@ -8,33 +7,28 @@ import { LoadingButtons } from '../ui/button/LoadingButton'
 import { GetHome } from '../../api/requests/GetHome'
 import contents from '../styles/AuthLayout.module.css'
 
+
 interface Layout {
     children: React.ReactNode;
     title?: string;
 }
 
-
 export function AuthLayout({children, title = 'Loading...'}: Layout) {
 
     const dispatch = useAppDispatch()
-    const api_uri = Run()
-    const { backend_url } = api_uri[0]
     const { data, isLoading, error } = useAppSelector(state => state.startReducer)
-    const [ url, setUrl ] = useState<string>('')
-    const { name, description, version, domain, info, api, support }: any = data
+    const { name, description, version, support }: any = data
 
     useEffect(() => {
         document.title = title
     }, [])
 
     useEffect(() => {
-        setUrl(backend_url)
-        dispatch(GetHome(url))
-    }, [url])
+        dispatch(GetHome())
+    }, [])
 
     return (
         <div className={`${contents.app} ${contents['bg-image']}`}>
-
             {error ? 
             <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%'}}>
                 <Alert severity="error">{error}</Alert>
@@ -59,7 +53,7 @@ export function AuthLayout({children, title = 'Loading...'}: Layout) {
                             <CardContent className={contents['bg-primary']}>
                                 {children}
                             </CardContent>
-                            <CardActions className={`${contents['bg-dark-primary']} ${contents['flex-center']}`}>
+                            <CardActions sx={{py: 2}} className={`${contents['bg-dark-primary']} ${contents['flex-center']}`}>
                                 {support &&
                                     <p className={contents['footer-title']}>
                                         {support.text}: &#160;
@@ -70,10 +64,8 @@ export function AuthLayout({children, title = 'Loading...'}: Layout) {
                                 <small className={contents['footer-title']}>&#160; Версия: {version}</small> 
                             </CardActions>
                         </Card>
-                        {/* <pre>{JSON.stringify(data, null, 4)}</pre> */}
                     </Container>                      
-                }  
-          
+                }
             </>}
         </div>
     )

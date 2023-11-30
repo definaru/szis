@@ -1,11 +1,10 @@
-import React, { Suspense, lazy, useState } from 'react'
 import { Typography, Paper } from '@mui/material'
-const Chart = lazy(() => import('react-apexcharts'))
+import React, { Suspense, lazy, useState } from 'react'
+
 
 export function ChartsOperator()
 {
-    
-
+    const Chart = lazy(() => import('react-apexcharts'))
     const [operator, setOperator] = useState({ 
         options: {
             chart: {

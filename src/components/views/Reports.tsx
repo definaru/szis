@@ -1,72 +1,46 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { MainLayout } from '../layout/MainLayout'
 import { InputDoobleCalendar } from '../ui/calendar/InputDoobleCalendar'
-import { Paper, Typography, Box, FormControl, MenuItem, Table, TableContainer, TableHead, TableRow, TableCell, TableBody } from '@mui/material'
+import { 
+    Paper, Typography, Box, FormControl, MenuItem, ThemeProvider, 
+    createTheme, Alert, Avatar, Stack, Chip, Divider, InputLabel
+} from '@mui/material'
+import dayjs from 'dayjs'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import { CsvIcon, XlsIcon, XmlIcon } from '../ui/icons/uiKit'
 import { ColorLabel } from '../ui/label/ColorLabel'
+import { useAppDispatch, useAppSelector } from '../../hooks/redux'
+import { GetInformation } from '../../api/requests/GetInformation'
+import { GetDataReports } from '../data/GetDataReports'
+import { TableReports } from '../ui/table/TableReports'
+import { ButtonsExport } from '../ui/button/ButtonsExport'
 import contents from '../styles/MainLayout.module.css'
-import { Button } from '../ui/button/Button'
+
 
 export function Reports()
 {
-    const [exports, setExport] = useState('xml')
+    const styles = GetDataReports()
+    const dispatch = useAppDispatch()
+    const theme = createTheme({palette: {mode: 'light'}})
+    const { data, isLoading, error } = useAppSelector(state => state.startReducer)
+
+    const { icon } = styles
+    const [exports, setExport] = useState('')
+
+    const [reports, setReports] = useState('')
+    const {id, user, name, script, method, message, caller, datetime}: any = reports
+
+    const GetReport = (id: string) => {
+        setReports(data?.find((item: any) => item.id === id))
+    }
+
     const handleChange = (event: SelectChangeEvent) => {
         setExport(event.target.value);
     }
-    const th = {color: '#7C7C7C', padding: '9px', borderBottom: '1px solid #F6F6F6'}
-    const tablehead = {color: '#000', padding: '4px 9px', fontWeight: 600, borderBottom: '1px solid #F6F6F6', fontSize: '13px'}
-    const icon = { width: '40px', paddingRight: '7px' }
-    const head = [
-        {
-            name: 'Дата',
-            size: ''
-        },
-        {
-            name: 'Событие',
-            size: '' 
-        },
-        {
-            name: 'Описание',
-            size: '' 
-        },
-        {
-            name: 'Пользователи',
-            size: '' 
-        }
-    ]
-    const body = [
-        {
-            date: '2023-10-01',
-            event: 'Исходящее USSD информирование',
-            description: '1231',
-            user: 'Иванов И.И.'
-        },
-        {
-            date: '2023-10-02',
-            event: 'Исходящее USSD информирование',
-            description: '124',
-            user: 'Иванов И.И.'
-        },
-        {
-            date: '2023-10-03',
-            event: 'Исходящее USSD информирование',
-            description: '1',
-            user: 'Сидоров И.Д.'
-        },
-        {
-            date: '2023-10-04',
-            event: 'Исходящее USSD информирование',
-            description: '18',
-            user: 'Иванов И.И.'
-        },
-        {
-            date: '2023-10-05',
-            event: 'Исходящее USSD информирование',
-            description: '6',
-            user: 'Иванов И.И.'
-        }
-    ]
+ 
+    useEffect(() => {
+        dispatch(GetInformation())
+    }, [])
 
     return (
         <MainLayout title='Отчеты'>
@@ -82,56 +56,93 @@ export function Reports()
                     <ColorLabel children="Неудачные отправки" name={'failsend'} color='danger' />
                     <ColorLabel children="SMS" name={'sms'} color='primary' />
                 </Box>
+                {isLoading && <div>Загрузка...</div>}
                 <InputDoobleCalendar />
             </Box>
+            <ThemeProvider theme={theme}>
+                <Box sx={{my: 2}}>
+                    <FormControl variant="standard" sx={{ minWidth: 220 }}>
+                        {exports === '' && <InputLabel>Выберите формат...</InputLabel>}
+                        <Select 
+                            value={exports} 
+                            onChange={handleChange} 
+                            defaultValue=''
+                            label="Права и роли"
+                            sx={{ 
+                                border: 'none', 
+                                '&.MuiInput-underline:before': { 
+                                    border: 0 
+                                } 
+                            }}
+                        >
+                            <MenuItem value={'xml'}><div style={icon}><XmlIcon /></div> Скачать как XML</MenuItem>
+                            <MenuItem value={'csv'}><div style={icon}><CsvIcon /></div> Скачать как CSV</MenuItem>
+                            <MenuItem value={'xlsx'}><div style={icon}><XlsIcon /></div> Скачать как XLS</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Box>                
+            </ThemeProvider>
+            {error && <Alert severity="error">{error}</Alert>}
 
-            <Box sx={{my: 2}}>
-                <FormControl variant="standard" sx={{ minWidth: 220 }}>
-                    <Select value={exports} onChange={handleChange} label="Права и роли">
-                        <MenuItem value={'xml'}><div style={icon}><XmlIcon /></div> Скачать как XML</MenuItem>
-                        <MenuItem value={'csv'}><div style={icon}><CsvIcon /></div> Скачать как CSV</MenuItem>
-                        <MenuItem value={'xls'}><div style={icon}><XlsIcon /></div> Скачать как XLS</MenuItem>
-                    </Select>
-                </FormControl>
-            </Box>
-
-            <Paper sx={{ width: '100%', bgcolor: '#fff', boxShadow: 3, p: 2  }}>
-                <TableContainer sx={{mb: 10, width: '100%'}}>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                            {head.map((item, i) => (
-                                <TableCell sx={tablehead} key={i} style={{width: item.size === '' ? 'auto' : `${item.size}px`}}>
-                                    {item.name}
-                                </TableCell>
-                            ))}
-                            </TableRow>
-                        </TableHead>
-                        {body ?
-                        <TableBody>
-                        {body.map((row, index) => (
-                            <TableRow key={index}>
-                                <TableCell sx={th}>
-                                    <a href="#"><u>{row.date}</u></a>
-                                </TableCell>
-                                <TableCell sx={th}>
-                                    {row.event}
-                                </TableCell>
-                                <TableCell sx={th}>
-                                    {row.description}
-                                </TableCell>                                      
-                                <TableCell sx={th}>
-                                    {row.user}
-                                </TableCell>
-                            </TableRow>
-                            ))}
-                        </TableBody> : ''}  
-                    </Table>
-                </TableContainer>
-                <Box sx={{ display: 'flex', gap: 2}}>
-                    <Button>Скачать</Button>
-                    <Button color='info'>Показать</Button>
-                </Box>
+            <Paper sx={{ width: '100%', bgcolor: '#fff', boxShadow: 3, p: 2, color: '#000'  }}>
+                {reports === '' ?
+                <div>
+                    <TableReports results={data} exports={exports} GetReport={GetReport} />
+                    {exports && <ButtonsExport exports={exports} />}
+                </div> :
+                <div>
+                    <button onClick={() => setReports('')}>Назад</button> &#160; Запрос #{id}
+                    <Stack spacing={4} sx={{my: 3}}>
+                        <Box>
+                            <Stack
+                                direction="row"
+                                justifyContent="flex-start"
+                                alignItems="center"
+                                spacing={2}
+                            >
+                                <Box>
+                                    {user.photo === null ?
+                                        <Avatar sx={{ bgcolor: '#ddd', width: 100, height: 100 }}>OP</Avatar> :
+                                        <Avatar 
+                                            alt="OP" 
+                                            src={`${process.env.REACT_APP_BASE_URL}${user.photo.avatar}`} 
+                                            sx={{ width: 100, height: 100 }} 
+                                        />
+                                    }                                
+                                </Box>
+                                <Stack>
+                                    <Typography variant="h5">
+                                        {user.first_name} {user.last_name}
+                                    </Typography>
+                                    <Typography variant="body1" sx={{color: '#999'}}>
+                                        <b>{user.email} | {`@${user.username}`}</b>
+                                    </Typography>
+                                    <Typography variant="body2" sx={{color: '#888'}}>
+                                        {user.phones?.map((item: any, i?: number) => item.phone)}
+                                    </Typography>
+                                </Stack>
+                            </Stack>
+                        </Box>
+                        <Divider sx={{bgcolor: '#ddd'}} />
+                        <Box><b>Название сценария:</b> {name}</Box>
+                        <Box><b>Тип отправки \ Метод:</b> {script} \ <i>{method}</i></Box>
+                        <Box><b>Сообщение:</b> <Alert sx={{width: '50%'}} severity="info">{message}</Alert></Box>
+                        <Box>
+                            <b>Получатели:</b> 
+                            <Stack
+                                direction="row"
+                                justifyContent="flex-start"
+                                alignItems="center"
+                                spacing={1}
+                            >
+                                {caller?.split(', ').map((item: string, i: number) => (
+                                    <Chip label={item} key={i} color="warning" />
+                                ))}                                
+                            </Stack>
+                        </Box>
+                        <Box><b>Дата отправки:</b> {dayjs(datetime).format('DD MMMM YYYY, HH:mm:ss')}</Box>
+                    </Stack>
+                </div>}
             </Paper>
         </MainLayout>
     )

@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
-import { Map } from '../../ui/icons/uiKit'
 import { Button } from '../../ui/button/Button'
-import { Box, TableContainer, TableHead, TableRow, TableCell, TableBody, Table, Alert, IconButton } from '@mui/material'
+import { Box, TableContainer, TableHead, TableRow, TableCell, TableBody, Table, Alert, IconButton, Checkbox } from '@mui/material'
 import { DeleteHandbook, GetHandbook } from '../../../api/requests/GetHandbook'
 import { UserDefault } from '../icons/uiKit'
 import { useAppDispatch, useAppSelector } from '../../../hooks/redux'
@@ -32,16 +31,13 @@ export function TableReference({width = 100, bottom = true, row = ''}: Tables)
 
     const [ open, setOpen ] = useState(false)
     const [ create, setCreate ] = useState(false)
-    const [ user, setUser ] = useState<string | null>(null)
+    const [ user, setUser ] = useState<string | null | any>(null)
     const [ list, setList ] = useState(results)
-    const [ edit, setEdit ] = useState(results)
-    const [ add, setAdd] = useState(null)
+    const [ edit, setEdit ] = useState()
+    const [checked, setChecked] = useState<any>([])
     const { th, tablehead, rows } = GetTableRef()
 
-    //const result = list?.find((person: any) => person.name === user )
-    const result = list ? list?.find((p: any) => p.name.includes(user)) : []
-
-    const Delete = (idx: any) => {
+    const Delete = (idx: string) => {
         setUser(null)
         setList(list.filter((item: any) => item.id !== idx))
         dispatch(DeleteHandbook(idx))
@@ -53,7 +49,7 @@ export function TableReference({width = 100, bottom = true, row = ''}: Tables)
     }
 
     const SelectContact = (name: string) => {
-        setUser(name)
+        setUser(results.find((p: any) => p.name.includes(name))) //name
         setCreate(false)
     }
 
@@ -62,14 +58,11 @@ export function TableReference({width = 100, bottom = true, row = ''}: Tables)
         setCreate(true)
     }
 
+    const isChecked = (id: any) => checked.includes(id)
+
     useEffect(() => {
         dispatch(GetHandbook())
-        setList(data?.results)
-        if(add !== null) {
-            list ? setList([...list, add]) : setList(add)
-            setTimeout(() => setAdd(null), 1000)
-        }
-    }, [add, user, edit])
+    }, [user, edit, open])
 
     return (
         <div>
@@ -81,35 +74,36 @@ export function TableReference({width = 100, bottom = true, row = ''}: Tables)
             <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: '25px' }}>
                 <div style={{width: `${width}%`}}>
                     {error && <Alert severity="error">{error}</Alert>}
+                    
                     <TableContainer sx={{mb: 10, width: '100%'}}>
-                        <Table>
+                        {list ? <Table>
                             <TableHead>
                                 <TableRow>
-                                    <TableCell sx={{padding: '9px 0', borderBottom: '1px solid #fff'}} />
                                     {rows.map((item, i) => (
                                         <TableCell sx={tablehead} key={i} style={{width: item.size === '' ? 'auto' : `${item.size}px`}}>
-                                            {item.name}
+                                            {item.name === 'ID' ? <div>&#160;&#160;&#160;&#160;{item.name}</div> : item.name}
                                         </TableCell>
                                     ))}
-                                    {row === 'Info' && 
+                                    {/* {row === 'Info' && 
                                         <TableCell sx={tablehead}>
                                             <Map color='#006AF2' />
                                         </TableCell>                            
-                                    }
+                                    } */}
                                 </TableRow>
                             </TableHead>
-                            {list ? 
                             <TableBody>
                                 {list.map((row: any, index: number) => (
                                     <TableRow 
                                         key={index}  
                                         sx={{backgroundColor: user === row.name ? '#f1f1f1' : '#fff'}}
                                     >
-                                        <TableCell sx={{padding: '9px 0', borderBottom: '1px solid #fff'}}>
-                                            <input type="radio" name="radio" id="radio" />
-                                        </TableCell>
-                                        <TableCell sx={th} onClick={() => SelectContact(row.name)}>
-                                            0{row.id}
+                                        <TableCell sx={th}>
+                                            <Checkbox
+                                                color="info"
+                                                checked={isChecked(row.id) ? true : false}
+                                                onClick={() => setChecked([...checked, row.id])}
+                                            /> 
+                                            {/* {row.id} */}
                                         </TableCell>
                                         <TableCell sx={th} onClick={() => SelectContact(row.name)}>
                                             {row.rank}
@@ -130,7 +124,7 @@ export function TableReference({width = 100, bottom = true, row = ''}: Tables)
                                         </TableCell>
                                         <TableCell sx={th}>
                                             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                                                {row.subdivision}
+                                                {row.division ?? '-- || --'}
                                                 <Box sx={{ display: 'flex', alignItems: 'center'}}>
                                                     <IconButton onClick={() => Edit(row.id)}>
                                                         <EditIcon />
@@ -143,13 +137,13 @@ export function TableReference({width = 100, bottom = true, row = ''}: Tables)
                                         </TableCell>
                                     </TableRow>
                                 ))}
-                            </TableBody> : ''}                                      
-                        </Table>
+                            </TableBody>                                     
+                        </Table> : ''}
                     </TableContainer>
                     {user &&
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: '10px', mb: 2 }}>
                         <Box sx={{ display: 'flex', gap: '15px' }}>
-                            <div onClick={() => Delete(result.id)}>
+                            <div onClick={() => Delete(user.id)}>
                                 <Button color='error'>Удалить</Button>
                             </div>
                             <IconButton sx={{color: '#000', bgcolor: '#fff', boxShadow: 2}}>
@@ -164,10 +158,15 @@ export function TableReference({width = 100, bottom = true, row = ''}: Tables)
                         </div>
                     </Box>}
                 </div>
-                {user !== null && <PersonCard person={result} />}
-                {create && <CreatePerson open={create} setOpen={setCreate} setAdd={setAdd} />}
+                {user !== null && <PersonCard person={user} />}
+                {create && 
+                <CreatePerson
+                    setOpen={setCreate} 
+                    list={list} 
+                    setList={setList} 
+                />}
             </Box>  
-            <ModelTable open={open} setOpen={setOpen} contact={edit} />          
+            {edit && <ModelTable open={open} setOpen={setOpen} contact={edit} />}
         </div>
     )
 }

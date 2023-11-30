@@ -7,10 +7,11 @@ type Props = {
     control: any;
     rules?: any;
     label: string;
+    defaultValue?: string;
     //setOpen: (newType: boolean) => void;
 }
 
-export function FormInputText({ name, control, rules, label }: Props) 
+export function FormInputText({ name, control, rules, label, defaultValue }: Props) 
 {
     return (
         <Controller
@@ -26,10 +27,11 @@ export function FormInputText({ name, control, rules, label }: Props)
                     helperText={error ? error.message : null}
                     error={!!error}
                     onChange={onChange}
-                    value={value}
+                    defaultValue={defaultValue}
                     fullWidth
                     label={label}
                     variant="outlined"
+                    autoComplete='off'
                 />
             )}
         />

@@ -31,7 +31,7 @@ export const dataSlice = createSlice({
             state.error = ''
             state.data = action.payload
         },
-        getCurrentUser(state, action: PayloadAction<User[]>) {
+        getInfoSend(state, action: PayloadAction<Arrays[]>) {
             state.isLoading = false
             state.error = ''
             state.data = action.payload

@@ -6,13 +6,13 @@ import contents from '../../styles/MainLayout.module.css'
 
 interface Card {
     label?: boolean;
-    person: Person | null;
+    person?: Person | null | any;
 }
 
 export function PersonCard({person = null}: Card)
 {
-    const { photo, name, phone, subdivision, location, status }: any = person
-    const photouser = photo === null ? '/img/user/default.png' : photo
+    const { photo, name, phone, division, location, status }: Person = person
+    const photouser = photo === null || photo === '' ? '/img/user/default.png' : photo
 
     return (
         <Paper sx={{ width: '800px', bgcolor: '#fff', boxShadow: 3, p: 2  }}>
@@ -26,10 +26,11 @@ export function PersonCard({person = null}: Card)
                             <strong>ФИО</strong>
                             <p>{name}</p>
                         </li>
+                        {division ?
                         <li>
                             <strong>Подразделение</strong>
-                            <p>{subdivision}</p>
-                        </li>
+                            <p>{division}</p>
+                        </li> : ('')}
                         <li>
                             <strong>Номер телефона</strong>
                             <p>{phone}</p>

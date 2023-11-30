@@ -44,7 +44,7 @@ export interface Handbook {
     photo: string | Blob;
     name: string;
     phone: string;
-    subdivision: string;
+    division: string;
     location: string;
     status: boolean;
 }
@@ -81,7 +81,19 @@ export interface Person {
     photo: string;
     name: string;
     phone: string;
-    subdivision: string;
+    division: string;
     location: string;
     status: boolean
+}
+
+
+export interface Inform {
+    id: number;
+    user: number;
+    datetime: string;
+    name: string;
+    script: string;
+    message: string;
+    method: string;
+    caller: string | string[];
 }

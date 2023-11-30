@@ -1,13 +1,10 @@
 import axios from 'axios'
 import { Inputs } from '../../components/views/Home'
-import { Run } from '../Run'
 
 
 export function GetAuthUser(data: Inputs)
 {
-    const api_uri = Run()
-    const { backend_url, preffix } = api_uri[0]
-    const url = backend_url+preffix+'token/auth/'
+    const url = `${process.env.REACT_APP_BASE_URL}${process.env.REACT_APP_PREFFIX}/token/auth/`
     if(data) {
         //console.log('From Form:', data) 
         const Auth = async() => {

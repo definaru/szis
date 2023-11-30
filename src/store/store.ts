@@ -1,10 +1,12 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit'
+import materialReducer from './reducers/MaterialSlice'
 import startReducer from './reducers/DataSlice'
 import authReduser from './reducers/AuthSlice'
 //import { authMiddleware } from '../middleware/authMiddleware'
 
 
 const RootReducer = combineReducers({
+    materialReducer,
     startReducer,
     authReduser
 })
