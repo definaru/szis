@@ -17,6 +17,7 @@ environ.Env.read_env()
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env.str('SECRET_KEY')
+BEELINE_API_KEY= env.str('BEELINE_API_KEY')
 ALLOWED_HOSTS = ['*']
 DEBUG = True  # False
 DEFAULT_FROM_EMAIL = 'work.dev.i@yandex.ru'
@@ -73,10 +74,15 @@ CORS_ALLOW_METHODS = (
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
-        'rest_framework.renderers.JSONRenderer', #'rest_framework.renderers.BrowsableAPIRenderer',
+        'rest_framework.renderers.JSONRenderer', 
+        #'rest_framework.renderers.BrowsableAPIRenderer',
         'drf_excel.renderers.XLSXRenderer',
         'rest_framework_csv.renderers.CSVRenderer', # https://github.com/mjumbewu/django-rest-framework-csv
+        'rest_framework_xml.renderers.XMLRenderer' # https://pypi.org/project/djangorestframework-xml/ 
     ],
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework_xml.parsers.XMLParser',
+    ),
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.BasicAuthentication',

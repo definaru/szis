@@ -4,9 +4,9 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
-from szis.data.datalist import LIST_OF_OPERATORS, STATUS, TYPE_NUMBER_PHONE, TYPE_SECTION, TYPE_POSITION, TYPE_RANK, TYPE_DIVISION
+from szis.data.datalist import *
+#LIST_OF_OPERATORS, STATUS, TYPE_NUMBER_PHONE, TYPE_SCRIPT, TYPE_SECTION, TYPE_POSITION, TYPE_METHOD
 from django.contrib.auth.models import User
-from rest_framework.reverse import reverse
 
 
 
@@ -107,14 +107,61 @@ class Scenarios(models.Model):
     datetime = models.DateTimeField(verbose_name='Дата создания')
 
 
-class Handbook(models.Model):
+class Rank(models.Model):
     id = models.AutoField(primary_key = True)
-    rank = models.CharField(max_length=100, null=False, verbose_name='Звание', choices=TYPE_RANK)
+    meaning = models.CharField(max_length=64, null=False, verbose_name='Значение', help_text='Данные для заполнения поля')
+    name = models.CharField(max_length=255, null=False, verbose_name='Полное наименование', help_text='Видимое значение из списка')
+    
+    class Meta:
+        verbose_name = 'звание'
+        verbose_name_plural = 'Список званий'
+    
+    def __str__(self): # ({self.name})
+        return f'{self.meaning}'
+    
+
+class Subdivision(models.Model):
+    id = models.AutoField(primary_key = True)
+    key = models.CharField(max_length=64, null=False, verbose_name='Значение', help_text='Данные для заполнения поля')
+    value = models.CharField(max_length=255, null=False, verbose_name='Название подразделения', help_text='Видимое значение из списка')
+    
+    class Meta:
+        verbose_name = 'полразделение'
+        verbose_name_plural = 'Список подразделений'
+    
+    def __str__(self):
+        return self.value
+
+
+# class Handbook(models.Model):
+#     id = models.AutoField(primary_key = True)
+#     #rank = models.ForeignKey(Rank, null=True, on_delete = models.CASCADE, related_name='rank', verbose_name='Звание')
+#     rank = models.CharField(max_length=255, null=True, verbose_name='Звание')
+#     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='book', verbose_name='ID пользователя')
+#     photo = models.ImageField(upload_to='images/photo/book', null=True, verbose_name='Фотография')
+#     name = models.CharField(max_length=255, null=False, verbose_name='Ф.И.О.')
+#     phone = models.CharField(max_length=64, null=False, verbose_name='Номера телефона')
+#     #subdivision = models.ForeignKey(Subdivision, null=True, on_delete = models.CASCADE, related_name='subdivision', verbose_name='Подразделение')
+#     subdivision = models.CharField(max_length=255, null=False, verbose_name='Подразделение')
+#     location = models.CharField(max_length=255, null=True, verbose_name='Локация')
+#     status = models.BooleanField(verbose_name='Статус')
+
+#     class Meta:
+#         verbose_name = 'запись'
+#         verbose_name_plural = 'Телефонный справочник'
+    
+#     def __str__(self):
+#         return self.name
+    
+
+class Handbooks(models.Model):
+    id = models.AutoField(primary_key = True)
+    rank = models.CharField(max_length=255, null=True, verbose_name='Звание')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='book', verbose_name='ID пользователя')
     photo = models.ImageField(upload_to='images/photo/book', null=True, verbose_name='Фотография')
-    name = models.CharField(max_length=255, null=False, verbose_name='ФИО')
+    name = models.CharField(max_length=255, null=False, verbose_name='Ф.И.О.')
     phone = models.CharField(max_length=64, null=False, verbose_name='Номера телефона')
-    subdivision = models.CharField(max_length=64, null=False, verbose_name='Подразделение', choices=TYPE_DIVISION)
+    division = models.CharField(max_length=255, null=False, verbose_name='Подразделение')
     location = models.CharField(max_length=255, null=True, verbose_name='Локация')
     status = models.BooleanField(verbose_name='Статус')
 
@@ -124,3 +171,19 @@ class Handbook(models.Model):
     
     def __str__(self):
         return self.name
+
+
+class Information(models.Model):
+    id = models.AutoField(primary_key = True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='user', verbose_name='ID пользователя')
+    datetime = models.DateTimeField(verbose_name='Дата создания')
+    name = models.CharField(max_length=255, null=False, verbose_name='Название сценария')
+    script = models.CharField(max_length=100, null=True, verbose_name='Выбор сценария', choices=TYPE_SCRIPT)
+    message = models.CharField(max_length=255, null=True, verbose_name='Сообщение оповещения')
+    method = models.CharField(max_length=100, null=True, verbose_name='Выбрать метод', choices=TYPE_METHOD)
+    caller = models.CharField(max_length=255, null=True, verbose_name='Выбор абонентов')
+    
+    class Meta:
+        verbose_name = 'сценарий'
+        verbose_name_plural = 'Сценарии информирования'
+    

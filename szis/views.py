@@ -1,24 +1,28 @@
-import secrets
+import secrets, requests
 from string import ascii_lowercase, ascii_uppercase, digits
 from django.http import JsonResponse
 from django.contrib.auth.models import User
-from szis.models import Zapros, Phone, Handbook
+from szis.models import Information, Rank, Subdivision, Zapros, Phone, Handbooks
 from django.core.mail import EmailMultiAlternatives
-from szis.serializers import HandbookSerializer, PhoneSerializer, UserSerializer, ZaprosSerializer
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+from szis.serializers import *
 from rest_framework import status, viewsets
+from rest_framework.renderers import JSONRenderer
+from drf_excel.mixins import XLSXFileMixin
+from rest_framework_csv.renderers import CSVRenderer
+from rest_framework_xml.renderers import XMLRenderer
+from drf_excel.renderers import XLSXRenderer
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from django.contrib.auth.models import User
 from django.template.loader import render_to_string
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
 from django.conf import settings
 from datetime import datetime
-from user_agents import parse
 
-        
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -37,16 +41,58 @@ class StandardResultsSetPagination(PageNumberPagination):
     max_page_size = 1000
 
 
+
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated, ]
+    renderer_classes = [JSONRenderer]
+
+
+
+class RankViewSet(viewsets.ModelViewSet):
+    queryset = Rank.objects.all().order_by('id')
+    serializer_class = RankSerializer
+    renderer_classes = [JSONRenderer]
+    def list(self, request, **kwargs):
+        serializer = RankSerializer(self.queryset, many=True) #
+        return Response(serializer.data)
+
+
+
+class SubdivisionViewSet(viewsets.ModelViewSet):
+    queryset = Subdivision.objects.all()
+    serializer_class = SubdivisionSerializer
+    renderer_classes = [JSONRenderer]
+
+
+
+class InformationViewSet(viewsets.ModelViewSet, XLSXFileMixin):
+    queryset = Information.objects.all()
+    serializer_class = InformationSerializer
+    permission_classes = [IsAuthenticated, ]
+    parser_classes = (MultiPartParser,FormParser,JSONParser)
+    renderer_classes = [JSONRenderer, XLSXRenderer, XMLRenderer, CSVRenderer]
+    now = datetime.now()
+    filename = f'report-{now}.xlsx'
+
+    def list(self, request, *args, **kwargs):
+        pk = kwargs.get("pk", None)
+        if not pk:
+            serializer = InfoSerializer(self.queryset, many=True)
+            return JsonResponse(list(serializer.data), safe=False)
+        
+        serializer = InfoSerializer()
+ 
+        return Response({"post": serializer.data})
+
 
 
 class ZaprosViewSet(viewsets.ModelViewSet):
     queryset = Zapros.objects.all()
     serializer_class = ZaprosSerializer
     permission_classes = [IsAuthenticated, ]
+    renderer_classes = [JSONRenderer]
     pagination_class = StandardResultsSetPagination
 
 
@@ -54,12 +100,14 @@ class PhoneViewSet(viewsets.ModelViewSet):
     queryset = Phone.objects.all()
     serializer_class = PhoneSerializer
     permission_classes = [IsAuthenticated, ]
+    renderer_classes = [JSONRenderer]
 
 
 class HandbookViewSet(viewsets.ModelViewSet):
-    queryset = Handbook.objects.all()
-    serializer_class = HandbookSerializer
+    queryset = Handbooks.objects.all()
+    serializer_class = HandbooksSerializer
     permission_classes = [IsAuthenticated, ]
+    renderer_classes = [JSONRenderer]
 
 
 def domain(request):
@@ -73,10 +121,10 @@ def index(request):
         {
             'name': settings.HEADER,
             'description': settings.DESCRIPTION,
-            'version': '0.1.6',
+            'version': '0.1.8',
             'domain': 'https://szis.netlify.app',
             'info': domain(request)+'/info',
-            'api': domain(request)+'/api/v1/',
+            'api': domain(request)+'/api/v1/?format=json',
             'support': {
                 'text': 'Служба технической поддержки',
                 'phone': settings.DEFAULT_PHONE,
@@ -87,9 +135,9 @@ def index(request):
     return JsonResponse(arr[0], safe=False)
 
 
-def reports(request):
-    data = Zapros.objects.all().values()
-    return JsonResponse(list(data), safe=False)
+# def reports(request):
+#     data = Zapros.objects.all().values()
+#     return JsonResponse(list(data), safe=False)
 
 
 def current_user(request, token):
@@ -111,6 +159,58 @@ def current_user(request, token):
         )
         return JsonResponse(list(response)[0], safe=False)
     
+
+def beelineAll(request):
+    url = "https://marketing.beeline.ru/partners/api/v1/campaign"
+    payload = {}
+    headers = {
+        'X-Api-Key': settings.BEELINE_API_KEY,
+        'Content-Type': 'application/json; charset=UTF-8'
+    }
+    response = requests.request("GET", url, headers=headers, data=payload)
+    return JsonResponse(response.json()['campaigns'], safe=False)
+
+
+def beeline(request, id = ''):
+    url = "https://marketing.beeline.ru/partners/api/v1/campaign/"+id
+    payload = {
+        # "geoZones": [
+        #     {
+        #         "latitude": "45.3412",
+        #         "longitude": "34.32541",
+        #         "radius": "5000"
+        #     }
+        # ],
+        # "targetNumbers": "79850257181",
+        # "timeTo": 22,
+        # "timeFrom": 9,
+        # "dateFrom": "2022-08-17",
+        # "count": 45,
+        # "dstkNew": {
+        #     "notificationType": 2,
+        #     "dstkPages": [
+        #         "1",
+        #         "2",
+        #         "3"
+        #     ]
+        # }
+    }
+
+    headers = {
+        'X-Api-Key': settings.BEELINE_API_KEY,
+        'Content-Type': 'application/json; charset=UTF-8'
+    }
+    response = requests.request("GET", url, headers=headers, data=str(payload))
+
+    if response.text == 'Campaign not found':
+        data = {
+            'type': 'Error',
+            'message': response.text,
+            'color': 'error'
+        }
+        return JsonResponse(data, safe=False)
+    else:    
+        return JsonResponse(response.json(), safe=False)
 
 
 def info(request):
@@ -168,6 +268,7 @@ def generate_password(length):
     letters = ascii_lowercase+ascii_uppercase+digits
     password = ''.join(secrets.choice(letters) for i in range(length))
     return password
+
 
 
 class ResetPassword(APIView):

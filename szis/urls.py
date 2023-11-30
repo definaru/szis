@@ -7,7 +7,6 @@ from szis.token import CustomAuthToken
 from django.conf import settings
 #from django.conf.urls.static import static
 #from django.conf.urls import url
-from django.conf import settings
 from django.views.static import serve
 from . import views
 
@@ -18,6 +17,9 @@ router.register(r'users', views.UserViewSet)
 router.register(r'report', views.ZaprosViewSet)
 router.register(r'phone', views.PhoneViewSet)
 router.register(r'book', views.HandbookViewSet)
+router.register(r'rank', views.RankViewSet)
+router.register(r'subdivision', views.SubdivisionViewSet)
+router.register(r'information', views.InformationViewSet)
 
 handler404 = 'szis.views.page_not_found'
 
@@ -32,6 +34,9 @@ urlpatterns = [
     path('api/v1/logout/', views.user_logout, name='logout'),
     path('admin/', admin.site.urls),
     path('api/v1/reset/password', views.ResetPassword.as_view(), name='reset_password'), 
+    #path('api/v1/create/book', views.CreateBook.as_view(), name='create_book'), 
     path('api/v1/me/<str:token>', views.current_user),
+    path('api/v1/beeline/company', views.beelineAll),
+    path('api/v1/beeline/company/<str:id>', views.beeline),
     path('info', views.info)
 ]

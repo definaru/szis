@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from szis.models import Zapros, Phone, Division, Position, UserProfile, Handbook
+from szis.models import *
+#Information, Rank, Zapros, Phone, Division, Position, UserProfile, Handbooks, Subdivision
 from django.contrib.auth.models import User, Group
 
 
@@ -8,6 +9,18 @@ class DivisionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Division
         fields = ['type'] #'id', 'otdel', 
+
+
+class SubdivisionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subdivision
+        fields = ['id', 'key', 'value'] #'id'
+
+
+class RankSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rank
+        fields = ['id', 'meaning', 'name'] #'id'
 
 
 class GroupSerializer(serializers.ModelSerializer):    
@@ -28,10 +41,12 @@ class UserPhoneSerializer(serializers.ModelSerializer):
         fields = ['first_name', 'last_name']
 
 
-class HandbookSerializer(serializers.ModelSerializer):
+class HandbooksSerializer(serializers.ModelSerializer):
+    #rank = RankSerializer(many=True)
+    #division = serializers.StringRelatedField()
     class Meta:
-        model = Handbook
-        fields = ['id', 'rank', 'user', 'photo', 'name', 'phone', 'subdivision', 'location', 'status']
+        model = Handbooks
+        fields = ['id', 'rank', 'user', 'photo', 'name', 'phone', 'division', 'location', 'status']
 
 
 class PositionSerializer(serializers.ModelSerializer):
@@ -86,3 +101,18 @@ class ZaprosSerializer(serializers.HyperlinkedModelSerializer):
             'longitude', 'latitude'
         ]
 
+
+class InfoSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    class Meta:
+        model = Information
+        fields = ['id', 'user', 'datetime', 'name', 'script', 'message', 'method', 'caller']
+
+
+class InformationSerializer(
+        serializers.HyperlinkedModelSerializer, 
+        serializers.ModelSerializer
+    ):
+    class Meta:
+        model = Information
+        fields = ['id', 'user', 'datetime', 'name', 'script', 'message', 'method', 'caller']
