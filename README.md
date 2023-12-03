@@ -55,7 +55,9 @@
 
 Ваш проект готов к запуску:
 
-`python manage.py runserver`
+```python
+python manage.py runserver
+```
 
 
 Вы можете зайти через `SSH` и выполнить sql команды для наполнения БАЗЫ ДАННЫХ.
